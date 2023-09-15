@@ -16,16 +16,20 @@ export default function WatchProviders({
         const { provider_name, logo_path } = provider;
         return (
           <div key={ provider_name + type }>
-            <div>
-              <p>{provider_name}</p>
-              <img
-                src={ imageUrl + logo_path }
-                alt=""
-                style={ { height: '100px', borderRadius: 20 } }
-              />
-            </div>
-
+            {provider_name && logo_path && (
+              <div>
+                <div>
+                  <p>{provider_name}</p>
+                  <img
+                    src={ imageUrl + logo_path }
+                    alt=""
+                    style={ { height: '100px', borderRadius: 20 } }
+                  />
+                </div>
+              </div>
+            )}
           </div>
+
         );
       })}
     </div>

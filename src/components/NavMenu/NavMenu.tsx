@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getAllGenres } from '../../utils';
+import { getCertainData } from '../../utils';
 import { GenreProps } from '../../types';
 
 export default function NavMenu() {
@@ -8,7 +8,7 @@ export default function NavMenu() {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await getAllGenres();
+      const data = await getCertainData('genre/movie/list');
       setGenres(data.genres);
     };
     getData();

@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MovieDetailsProps, ProvidersProps } from '../../types';
-import { getByMovie, getProviders } from '../../utils';
+import { getCertainData } from '../../utils';
 import ProvidersCard from '../../components/ProvidersCard/ProvidersCard';
 
 export default function Movie() {
@@ -17,8 +17,8 @@ export default function Movie() {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await getByMovie(id as string);
-      const providersData = await getProviders(id as string);
+      const data = await getCertainData(`movie/${id}`);
+      const providersData = await getCertainData(`movie/${id}/watch/providers`);
       setProviders(providersData.results.US);
       setMovie(data);
     };

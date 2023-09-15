@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getPopularMovies, getTopRated, getTrending, getUpcoming } from '../../utils';
+import { getHomeMovies } from '../../utils';
 import { HomeMoviesProps } from '../../types';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
 
@@ -8,10 +8,8 @@ export default function Home() {
 
   useEffect(() => {
     const getData = async () => {
-      const popularData = await getPopularMovies();
-      const trendingData = await getTrending();
-      const upcomingData = await getUpcoming();
-      const topRatedData = await getTopRated();
+      const { popularData,
+        trendingData, upcomingData, topRatedData } = await getHomeMovies();
       setHomeMovies({
         popular: popularData.results,
         trending: trendingData.results,

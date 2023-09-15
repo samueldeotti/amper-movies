@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { getByGenre, getMoviesByName } from '../../utils';
+import { getCertainData, getMoviesByName } from '../../utils';
 
 import { MovieProps } from '../../types';
 import MovieCard from '../../components/MovieCard/MovieCard';
@@ -15,11 +15,11 @@ export default function SearchedMovies() {
   useEffect(() => {
     const getData = async () => {
       if (id) {
-        const data = await getByGenre(id as string);
+        const data = await getCertainData(`discover/movie?with_genres=${id}`);
         setMovies(data.results);
       } else {
         const data = await getMoviesByName(searchMovie as string);
-        setMovies(data.results);
+        setMovies(data);
       }
     };
     getData();
@@ -30,7 +30,7 @@ export default function SearchedMovies() {
       {!movies.length ? <p>Loading...</p>
         : (
           <div>
-            <p>{`All ${name} movies`}</p>
+            <p>{`All ${name || searchMovie} movies`}</p>
             {movies.map((movie) => (
               <MovieCard key={ movie.id } movie={ movie } />
             ))}

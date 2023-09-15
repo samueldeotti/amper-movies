@@ -1,5 +1,7 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/naming-convention */
 import axios from 'axios';
+import { MovieProps } from './types';
 
 export const TOKEN = import.meta.env.VITE_TOKEN;
 const BASE_URL = import.meta.env.VITE_BASE;
@@ -41,51 +43,23 @@ const searchUrl = axios.create({
 //   body: JSON.stringify({ request_token: '6667b23f7b5a7d318b1de3158c034672d6ba6ebe' }),
 // };
 
-const getPopularMovies = async () => {
-  const { data } = await baseUrl.get('movie/popular');
-  return data;
-};
-const getTrending = async () => {
-  const { data } = await baseUrl.get('trending/movie/day');
-  return data;
-};
-const getUpcoming = async () => {
-  const { data } = await baseUrl.get('movie/upcoming');
+const getCertainData = async (url: string) => {
+  const { data } = await baseUrl.get(url);
   return data;
 };
 
-const getTopRated = async () => {
-  const { data } = await baseUrl.get('movie/top_rated');
-  return data;
-};
+const getHomeMovies = async () => {
+  const popularData = await getCertainData('movie/popular');
+  const trendingData = await getCertainData('trending/movie/day');
+  const upcomingData = await getCertainData('movie/upcoming');
+  const topRatedData = await getCertainData('movie/top_rated');
 
-const getAllGenres = async () => {
-  const { data } = await baseUrl.get('genre/movie/list');
-  return data;
-};
-
-const getByGenre = async (id: string) => {
-  const { data } = await baseUrl.get(`discover/movie?with_genres=${id}`);
-  return data;
-};
-const getByMovie = async (id: string) => {
-  const { data } = await baseUrl.get(`movie/${id}`);
-  return data;
-};
-
-const getProviders = async (id:string) => {
-  const { data } = await baseUrl.get(`movie/${id}/watch/providers`);
-  return data;
+  return { popularData, trendingData, upcomingData, topRatedData };
 };
 
 const getMoviesByName = async (searchMovie:string) => {
-  const { data } = await searchUrl.get(`?query=${searchMovie}`);
-  return data;
-};
-
-const getRequestToken = async () => {
-  const { data } = await baseUrl.get('https://api.themoviedb.org/3/authentication/token/new');
-  return data;
+  const { data } = await searchUrl.get(`https://api.themoviedb.org/3/search/movie?query=${searchMovie}&include_adult=false&language=en-US`);
+  return data.results.filter((movie: MovieProps) => movie.backdrop_path && movie.poster_path && movie.overview && movie.title && movie.vote_average > 0);
 };
 
 const createSession = async (tokenUser: string) => {
@@ -109,11 +83,5 @@ const getUserData = async (tokenUser: string) => {
   return data;
 };
 
-export { getPopularMovies,
-  getTrending,
-  getUpcoming,
-  getTopRated,
-  getAllGenres, getByGenre,
-  getByMovie,
-  getProviders,
-  getRequestToken, getMoviesByName, createSession, getUserData };
+export { getHomeMovies,
+  getMoviesByName, createSession, getUserData, getCertainData };
