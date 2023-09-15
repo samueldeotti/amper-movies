@@ -11,8 +11,8 @@ export default function WatchProviders({
 
   return (
     <div>
-      {providers.results?.US?.[type] && <p>{options}</p>}
-      {providers.results?.US?.[type]?.map((provider: any) => {
+      {providers[type] && <p>{options}</p>}
+      {providers[type]?.map((provider: any) => {
         const { provider_name, logo_path } = provider;
         return (
           <div key={ provider_name + type }>

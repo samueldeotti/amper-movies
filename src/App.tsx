@@ -12,6 +12,7 @@ function App() {
         <Route index element={ <Home /> } />
         <Route path="movie/:id" element={ <Movie /> } />
         <Route path="/genre/:id/:name" element={ <SearchedMovies /> } />
+        <Route path="/search?" element={ <SearchedMovies /> } />
       </Route>
       {/* <Route path='/*' element={ <NotFound /> }></Route> */}
     </Routes>

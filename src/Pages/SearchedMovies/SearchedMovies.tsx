@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { getByGenre } from '../../utils';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { getByGenre, getMoviesByName } from '../../utils';
 
 import { MovieProps } from '../../types';
 import MovieCard from '../../components/MovieCard/MovieCard';
@@ -9,15 +9,21 @@ export default function SearchedMovies() {
   const [movies, setMovies] = useState<MovieProps[]>([]);
 
   const { id, name } = useParams();
+  const [searchParams] = useSearchParams();
+  const searchMovie = searchParams.get('q');
 
   useEffect(() => {
     const getData = async () => {
-      const data = await getByGenre(id as string);
-      console.log(data);
-      setMovies(data.results);
+      if (id) {
+        const data = await getByGenre(id as string);
+        setMovies(data.results);
+      } else {
+        const data = await getMoviesByName(searchMovie as string);
+        setMovies(data.results);
+      }
     };
     getData();
-  }, [id]);
+  }, [id, searchMovie]);
 
   return (
     <div>

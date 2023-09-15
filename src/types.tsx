@@ -60,16 +60,32 @@ export type MovieDetailsProps = {
 };
 
 export type ProvidersProps = {
-  link: string;
-  rent?: {
-    buy?: {
-      link: string;
-      rent: {
-        link: string;
-      };
+  link?: string;
+  rent?: TypesProps[];
+  buy?: TypesProps[];
+  flatrate?: TypesProps[];
+};
+
+export type TypesProps = {
+  display_priority: number;
+  logo_path: string;
+  provider_id: number;
+  provider_name: string;
+};
+
+export type UserTypes = {
+  avatar: {
+    gravatar: {
+      hash: string;
+    };
+    tmdb: {
+      avatar_path: string;
     };
   };
-  flatrate?: {
-    link: string;
-  };
+  id: number;
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  include_adult: boolean;
+  username: string;
 };

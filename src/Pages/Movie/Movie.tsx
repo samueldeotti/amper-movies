@@ -3,13 +3,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { MovieDetailsProps, MovieProps, ProvidersProps } from '../../types';
+import { MovieDetailsProps, ProvidersProps } from '../../types';
 import { getByMovie, getProviders } from '../../utils';
 import ProvidersCard from '../../components/ProvidersCard/ProvidersCard';
 
 export default function Movie() {
   const [movie, setMovie] = useState({} as MovieDetailsProps);
-  const [providers, setProviders] = useState<ProvidersProps>({} as ProvidersProps);
+  const [providers, setProviders] = useState<ProvidersProps
+  | undefined>({} as ProvidersProps);
 
   const { id } = useParams();
   const imageUrl = import.meta.env.VITE_IMG;
@@ -18,7 +19,7 @@ export default function Movie() {
     const getData = async () => {
       const data = await getByMovie(id as string);
       const providersData = await getProviders(id as string);
-      setProviders(providersData);
+      setProviders(providersData.results.US);
       setMovie(data);
     };
     getData();
@@ -60,13 +61,8 @@ export default function Movie() {
             </p>}
             <div>
               <p>Where to Watch</p>
-              {/* ARRUMAR ESSA PARTE, QUANDO NAO TEM NENHUM NAO ESTA MOSTRANDO A PARTE DO NENHUM LOCAL ENCONTRADO */}
-
-              {/* {!Object.keys(providers?.results?.US).length ? <p>No services found</p>
-                : (
-                  <ProvidersCard providers={ providers } />
-                )} */}
-
+              { !providers ? <p>No services found</p>
+                : (<ProvidersCard providers={ providers } />)}
             </div>
             <p>Similars</p>
           </div>
