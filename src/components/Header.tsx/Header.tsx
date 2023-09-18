@@ -7,8 +7,8 @@ import { UserTypes } from '../../types';
 export default function Header() {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
-  // const [requestToken, setRequestToken] = useState('');
-  const [user, setUser] = useState<UserTypes>({} as UserTypes);
+  const savedUser = localStorage.getItem('user');
+  const [user, setUser] = useState<UserTypes>(savedUser ? JSON.parse(savedUser) : {});
 
   const [searchParams] = useSearchParams();
   const authToken = searchParams.get('request_token');
@@ -17,11 +17,11 @@ export default function Header() {
     if (!user.id) {
       const getData = async () => {
         const data = await createSession(authToken as string);
-        console.log('entrou aqui');
         setUser(data);
+        localStorage.setItem('user', JSON.stringify(data));
+        navigate('/');
       };
       getData();
-      console.log(user);
     }
   }, [user.id]);
 
@@ -42,12 +42,16 @@ export default function Header() {
   const handleClick = async () => {
     if (!user.id) {
       const data = await getCertainData('https://api.themoviedb.org/3/authentication/token/new');
-      // setRequestToken(data.request_token);
       window.location.href = `https://www.themoviedb.org/authenticate/${data.request_token}?redirect_to=https://ampermovies.surge.sh/`;
     }
-
     // alert('Você ira ser redirecionado');
     // talvez futuramente colocar uma verificação para ver mesmo se o usuario quer ser redirecionado ou nao
+  };
+
+  const handleLogOut = () => {
+    localStorage.removeItem('user');
+    setUser({} as UserTypes);
+    navigate('/'); // verificar se fica uma melhor opção deixar o usuario na mesma pagina ou redirecionar para a home
   };
 
   return (
@@ -72,7 +76,19 @@ export default function Header() {
       </form>
 
       {/* ?redirect_to=http://www.yourapp.com/approved  colocar esse link despois no href do a, para assim que o usuario logar ele volte para a pagina */}
-      <button onClick={ handleClick }>{user.id ? user.username : 'Login'}</button>
+      {user.id ? (
+        <details>
+          <summary>{user.username}</summary>
+          <Link to="/favorites">Favorites Movies</Link>
+          <Link to="/watchlist">Watchlist</Link>
+          <Link to="/ratedmovies">Rated Movies</Link>
+          <a href={ `https://www.themoviedb.org/u/${user.username}` } target="_blanck">See Profile</a>
+          <button onClick={ handleLogOut }>Log Out</button>
+        </details>
+      )
+        : (
+          <button onClick={ handleClick }>Login</button>
+        )}
 
     </div>
   );
