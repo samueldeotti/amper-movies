@@ -6,22 +6,25 @@ import { MovieProps } from './types';
 export const TOKEN = import.meta.env.VITE_TOKEN;
 const BASE_URL = import.meta.env.VITE_BASE;
 const SEARCH_URL = import.meta.env.VITE_SEARCH;
+const AUTHORIZATION = import.meta.env.VITE_AUTHORIZATION;
 
 axios.defaults.baseURL = BASE_URL;
 axios.defaults.headers.common.Authorization = TOKEN;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+const headers = {
+  accept: 'application/json',
+  'content-type': 'application/json',
+  Authorization: AUTHORIZATION,
+};
 
 const baseUrl = axios.create({
   baseURL: BASE_URL,
   params: {
     api_key: TOKEN,
     include_adult: false,
-    language: 'en-US',
+    language: 'en-US', // fazer com que essa lingua seja responsiva com o q tem salvo no localstorage, fazer com que a pagina também seja responsiva com o q tem salvo no localstorage
   },
-  // headers: {
-  //   accept: 'application/json',
-  //   Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMzVhNmE5ZDkwY2U1ZGQ5OWUwMjlkY2E0NzE0MDU4OCIsInN1YiI6IjY0YzUxZjlmZWVjNWI1MDBmZjUxOWQ1ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.92Irg1v4yRuz_sYP3AgPwhc55fW13os6y4eACvi7lEA',
-  // },
 });
 
 const searchUrl = axios.create({
@@ -32,16 +35,6 @@ const searchUrl = axios.create({
     language: 'en-US',
   },
 });
-
-// const options = {
-//   method: 'POST',
-//   headers: {
-//     accept: 'application/json',
-//     'content-type': 'application/json',
-//     Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMzVhNmE5ZDkwY2U1ZGQ5OWUwMjlkY2E0NzE0MDU4OCIsInN1YiI6IjY0YzUxZjlmZWVjNWI1MDBmZjUxOWQ1ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.92Irg1v4yRuz_sYP3AgPwhc55fW13os6y4eACvi7lEA',
-//   },
-//   body: JSON.stringify({ request_token: '6667b23f7b5a7d318b1de3158c034672d6ba6ebe' }),
-// };
 
 const getCertainData = async (url: string) => {
   const { data } = await baseUrl.get(url);
@@ -63,16 +56,7 @@ const getMoviesByName = async (searchMovie:string) => {
 };
 
 const createSession = async (tokenUser: string) => {
-  const response = await fetch('https://api.themoviedb.org/3/authentication/session/new', {
-    method: 'POST',
-    headers: {
-      accept: 'application/json',
-      'content-type': 'application/json',
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMzVhNmE5ZDkwY2U1ZGQ5OWUwMjlkY2E0NzE0MDU4OCIsInN1YiI6IjY0YzUxZjlmZWVjNWI1MDBmZjUxOWQ1ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.92Irg1v4yRuz_sYP3AgPwhc55fW13os6y4eACvi7lEA',
-    },
-    body: JSON.stringify({ request_token: tokenUser }),
-  });
-  const data = await response.json();
+  const { data } = await axios.post(`${BASE_URL}authentication/session/new`, JSON.stringify({ request_token: tokenUser }), { headers });
   const userData = await getUserData(data.session_id);
   return userData;
 };

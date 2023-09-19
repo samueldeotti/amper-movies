@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { BsFillPersonFill } from 'react-icons/bs';
 import { createSession, getCertainData } from '../../utils';
 import { UserTypes } from '../../types';
 
@@ -12,6 +13,8 @@ export default function Header() {
 
   const [searchParams] = useSearchParams();
   const authToken = searchParams.get('request_token');
+
+  const imageUrl = import.meta.env.VITE_IMG;
 
   useEffect(() => {
     if (!user.id) {
@@ -51,17 +54,17 @@ export default function Header() {
   const handleLogOut = () => {
     localStorage.removeItem('user');
     setUser({} as UserTypes);
+    localStorage.removeItem('seenRecently');
     navigate('/'); // verificar se fica uma melhor opção deixar o usuario na mesma pagina ou redirecionar para a home
   };
 
   return (
-    <div>
+    <header>
       <h1>
         <Link to="/" onClick={ clearInput }>
           Amper
           <span>Movies</span>
         </Link>
-
       </h1>
       <form action="" onSubmit={ submit }>
         <label htmlFor="">
@@ -75,21 +78,23 @@ export default function Header() {
         <button type="submit">Lupa</button>
       </form>
 
-      {/* ?redirect_to=http://www.yourapp.com/approved  colocar esse link despois no href do a, para assim que o usuario logar ele volte para a pagina */}
       {user.id ? (
-        <details>
-          <summary>{user.username}</summary>
-          <Link to="/favorites">Favorites Movies</Link>
-          <Link to="/watchlist">Watchlist</Link>
-          <Link to="/ratedmovies">Rated Movies</Link>
-          <a href={ `https://www.themoviedb.org/u/${user.username}` } target="_blanck">See Profile</a>
-          <button onClick={ handleLogOut }>Log Out</button>
-        </details>
-      )
-        : (
-          <button onClick={ handleClick }>Login</button>
-        )}
+        <div>
+          <details>
+            <summary>{user.username}</summary>
+            <Link to="/favorites">Favorites Movies</Link>
+            <Link to="/watchlist">Watchlist</Link>
+            <Link to="/ratedmovies">Rated Movies</Link>
+            <a href={ `https://www.themoviedb.org/u/${user.username}` } target="_blanck">See Profile</a>
+            <button onClick={ handleLogOut }>Log Out</button>
+          </details>
+          {/* tirar as interrogações daqui depois, nao precisa */}
+          {user?.avatar?.tmdb?.avatar_path ? (
+            <img src={ user.avatar.tmdb.avatar_path + imageUrl } alt="user avatar" />
+          ) : <BsFillPersonFill />}
+        </div>
+      ) : (<button onClick={ handleClick }>Login</button>)}
 
-    </div>
+    </header>
   );
 }

@@ -18,6 +18,11 @@ export default function Movie() {
   useEffect(() => {
     const getData = async () => {
       const data = await getCertainData(`movie/${id}`);
+      const seenRecently = JSON.parse(localStorage.getItem('seenRecently') || '[]');
+      if (!seenRecently.includes(data.id)) {
+        localStorage.setItem('seenRecently', JSON
+          .stringify([...seenRecently, data.id]));
+      }
       const providersData = await getCertainData(`movie/${id}/watch/providers`);
       setProviders(providersData.results.US);
       setMovie(data);
