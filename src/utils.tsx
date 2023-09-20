@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/naming-convention */
 import axios from 'axios';
-import { MovieProps } from './types';
+import { MovieDetailsProps, MovieProps } from './types';
 
 export const TOKEN = import.meta.env.VITE_TOKEN;
 const BASE_URL = import.meta.env.VITE_BASE;
@@ -46,8 +46,14 @@ const getHomeMovies = async () => {
   const trendingData = await getCertainData('trending/movie/day');
   const upcomingData = await getCertainData('movie/upcoming');
   const topRatedData = await getCertainData('movie/top_rated');
+  let recentlyMovies = [];
 
-  return { popularData, trendingData, upcomingData, topRatedData };
+  const seenRecently = JSON.parse(localStorage.getItem('seenRecently') || '[]');
+  if (seenRecently.length) {
+    recentlyMovies = await Promise.all(seenRecently.map(async (movieId: MovieDetailsProps) => getCertainData(`movie/${movieId}`)));
+  }
+
+  return { popularData, trendingData, upcomingData, topRatedData, recentlyMovies };
 };
 
 const getMoviesByName = async (searchMovie:string) => {

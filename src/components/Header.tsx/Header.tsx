@@ -55,6 +55,8 @@ export default function Header() {
     localStorage.removeItem('user');
     setUser({} as UserTypes);
     localStorage.removeItem('seenRecently');
+    // tentar pensar numa solução mehlor, pq aqui, quando o usario deslogar, nunca mais vai ser possivel ver os filmes que ele ja viu, pois, o user vem da API, mas o seenRecently vem do localstorage
+
     navigate('/'); // verificar se fica uma melhor opção deixar o usuario na mesma pagina ou redirecionar para a home
   };
 
@@ -88,8 +90,7 @@ export default function Header() {
             <a href={ `https://www.themoviedb.org/u/${user.username}` } target="_blanck">See Profile</a>
             <button onClick={ handleLogOut }>Log Out</button>
           </details>
-          {/* tirar as interrogações daqui depois, nao precisa */}
-          {user?.avatar?.tmdb?.avatar_path ? (
+          {user.avatar.tmdb.avatar_path ? (
             <img src={ user.avatar.tmdb.avatar_path + imageUrl } alt="user avatar" />
           ) : <BsFillPersonFill />}
         </div>

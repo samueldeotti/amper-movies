@@ -24,6 +24,7 @@ export type HomeMoviesProps = {
   trending: MovieProps[];
   upcoming: MovieProps[];
   topRated: MovieProps[];
+  recentlyMovies: MovieProps[];
 };
 
 export type GenreProps = {
