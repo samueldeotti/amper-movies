@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
-import { MovieDetailsProps, MovieProps } from '../../types';
+import { ActorMoviesProps, MovieDetailsProps, MovieProps } from '../../types';
 
 type MovieCardProps = {
-  movie: MovieProps | MovieDetailsProps;
+  movie: MovieProps | MovieDetailsProps | ActorMoviesProps;
+  character?: string;
 };
 
-export default function MovieCard({ movie }: MovieCardProps) {
+export default function MovieCard({ movie, character = '' }: MovieCardProps) {
   const imageUrl = import.meta.env.VITE_IMG;
   return (
     <div>
@@ -14,6 +15,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
         <h1>{movie.title}</h1>
       </Link>
       <p>{movie.vote_average.toFixed(1)}</p>
+      {character && <p>{character}</p>}
     </div>
   );
 }

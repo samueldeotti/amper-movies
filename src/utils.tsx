@@ -38,6 +38,9 @@ const searchUrl = axios.create({
 
 const getCertainData = async (url: string) => {
   const { data } = await baseUrl.get(url);
+  if (data.results && !url.includes('watch/providers')) {
+    return data.results.filter((movie: MovieProps) => movie.backdrop_path && movie.poster_path && movie.overview && movie.title && movie.vote_average > 0);
+  }
   return data;
 };
 

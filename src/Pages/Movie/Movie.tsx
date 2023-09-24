@@ -2,7 +2,7 @@
 /* eslint-disable react/jsx-closing-tag-location */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { CastDetailsProps, MovieDetailsProps, ProvidersProps } from '../../types';
 import { getCertainData } from '../../utils';
 import ProvidersCard from '../../components/ProvidersCard/ProvidersCard';
@@ -30,8 +30,8 @@ export default function Movie() {
       const similarData = await getCertainData(`movie/${id}/similar`);
       const castData = await getCertainData(`movie/${id}/credits`);
       setMovie(data);
-      setProviders(providersData.results.US);
-      setSimilars(similarData.results);
+      setProviders(providersData.US);
+      setSimilars(similarData);
       setCast(castData.cast);
     };
     getData();
@@ -71,6 +71,7 @@ export default function Movie() {
             </div>
             <p>{overview}</p>
             <div>
+              <Link to={ `/cast/${movie.id}` }>See the full cast</Link>
               <MovieCarousel movies={ cast?.slice(0, 12) } text="Cast" />
             </div>
             {homepage

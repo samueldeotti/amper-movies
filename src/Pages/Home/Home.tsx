@@ -12,10 +12,10 @@ export default function Home() {
         trendingData, upcomingData, topRatedData, recentlyMovies,
       } = await getHomeMovies();
       setHomeMovies({
-        popular: popularData.results,
-        trending: trendingData.results,
-        upcoming: upcomingData.results,
-        topRated: topRatedData.results,
+        popular: popularData,
+        trending: trendingData,
+        upcoming: upcomingData,
+        topRated: topRatedData,
         recentlyMovies,
       });
     };

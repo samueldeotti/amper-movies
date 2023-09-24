@@ -4,6 +4,7 @@ import Home from './Pages/Home/Home';
 import Layout from './Pages/Layout/Layout';
 import Movie from './Pages/Movie/Movie';
 import SearchedMovies from './Pages/SearchedMovies/SearchedMovies';
+import Person from './Pages/Person/Person';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="movie/:id" element={ <Movie /> } />
         <Route path="/genre/:id/:name" element={ <SearchedMovies /> } />
         <Route path="/search?" element={ <SearchedMovies /> } />
+        <Route path="/person/:name/:id" element={ <Person /> } />
       </Route>
       {/* <Route path='/*' element={ <NotFound /> }></Route> */}
     </Routes>

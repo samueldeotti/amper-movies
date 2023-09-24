@@ -16,7 +16,7 @@ export default function SearchedMovies() {
     const getData = async () => {
       if (id) {
         const data = await getCertainData(`discover/movie?with_genres=${id}`);
-        setMovies(data.results);
+        setMovies(data);
       } else {
         const data = await getMoviesByName(searchMovie as string);
         setMovies(data);
