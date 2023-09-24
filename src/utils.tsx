@@ -76,5 +76,10 @@ const getUserData = async (tokenUser: string) => {
   return data;
 };
 
+const addRating = async (movieId: string, rating: number) => {
+  const { data } = await axios.post(`${BASE_URL}movie/${movieId}/rating?`, JSON.stringify({ value: rating }), { headers });
+  console.log(data);
+};
+
 export { getHomeMovies,
-  getMoviesByName, createSession, getUserData, getCertainData };
+  getMoviesByName, createSession, getUserData, getCertainData, addRating };

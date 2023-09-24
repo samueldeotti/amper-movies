@@ -14,12 +14,14 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
+    "react-modal": "^3.16.1",
     "react-router-dom": "^6.15.0"
   },
   "devDependencies": {
     "@trybe/eslint-config-frontend": "^1.11.4",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@types/react-modal": "^3.16.0",
     "@vitejs/plugin-react": "^4.0.3",
     "eslint": "^8.45.0",
     "typescript": "^5.0.2",

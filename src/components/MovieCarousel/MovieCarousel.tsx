@@ -8,7 +8,14 @@ type MovieCardProps = {
 
 export default function MovieCarousel({ movies, text }: MovieCardProps) {
   return (
-    <div style={ { display: 'flex' } }>
+    <div
+      style={ {
+        display: 'flex',
+        maxWidth: 1000,
+        overflowX: 'auto',
+        maxHeight: 550,
+        overflowY: 'hidden' } }
+    >
       <p>{text}</p>
       {movies.map((movie: any) => (movie?.title
         ? <MovieCard key={ movie.id } movie={ movie } />

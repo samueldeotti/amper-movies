@@ -3,8 +3,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import Modal from 'react-modal';
 import { CastDetailsProps, MovieDetailsProps, ProvidersProps } from '../../types';
-import { getCertainData } from '../../utils';
+import { addRating, getCertainData } from '../../utils';
 import ProvidersCard from '../../components/ProvidersCard/ProvidersCard';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
 
@@ -14,6 +15,8 @@ export default function Movie() {
   | undefined>({} as ProvidersProps);
   const [similars, setSimilars] = useState([] as MovieDetailsProps[]);
   const [cast, setCast] = useState<CastDetailsProps[]>([]);
+  const [rating, setRating] = useState(1);
+  const [isOpen, setIsOpen] = useState(false);
 
   const { id } = useParams();
   const imageUrl = import.meta.env.VITE_IMG;
@@ -53,6 +56,34 @@ export default function Movie() {
   const minutesWath = (hoursWatch - Math.floor(hoursWatch))
     .toFixed(2).toString().split('.')[1];
 
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
+
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const savedUser = JSON.parse(localStorage.getItem('user') as any) || {} as any;
+
+    if (savedUser.id) {
+      addRating(id as string, rating);
+      closeModal();
+      alert('Rating added/updated');
+    } else {
+      const data = await getCertainData('https://api.themoviedb.org/3/authentication/token/new');
+      window.location.href = `https://www.themoviedb.org/authenticate/${data.request_token}?redirect_to=https://ampermovies.surge.sh`;
+    }
+  };
+
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
@@ -61,7 +92,17 @@ export default function Movie() {
           <div>
             <h2>{title}</h2>
             <p>{tagline}</p>
-            <p>{Number(vote_average).toFixed(1)}</p>
+            <div>
+              <p>TMDB Rating</p>
+              <p>{Number(vote_average).toFixed(1)}</p>
+            </div>
+            <div>
+              <p>Add your rate</p>
+              <button onClick={ openModal }>
+                <img src="/starIcon.png" alt="" style={ { width: 50 } } />
+              </button>
+
+            </div>
             <img src={ imageUrl + poster_path } alt="" />
             <p>{release_date?.split('-')[0]}</p>
             <p>{`Duration ${hoursWatch.toFixed(0)}h ${minutesWath}m`}</p>
@@ -88,6 +129,32 @@ export default function Movie() {
             <div>
               <MovieCarousel movies={ similars.slice(0, 12) } text="More like this" />
             </div>
+
+            <Modal
+              isOpen={ isOpen }
+              onRequestClose={ closeModal }
+              style={ customStyles }
+              contentLabel="Example Modal"
+              ariaHideApp={ false }
+            >
+              <div>
+                <p>Rate this</p>
+                <p>{title}</p>
+              </div>
+              <button onClick={ closeModal }>X</button>
+              <form onSubmit={ handleSubmit }>
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  step="1"
+                  value={ rating }
+                  onChange={ ({ target }) => setRating(+target.value) }
+                />
+                <button type="submit">Rate</button>
+              </form>
+            </Modal>
+
           </div>
 
         )}

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { CastDetailsProps } from '../../types';
 
