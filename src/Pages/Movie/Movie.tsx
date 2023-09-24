@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { MovieDetailsProps, ProvidersProps } from '../../types';
+import { CastDetailsProps, MovieDetailsProps, ProvidersProps } from '../../types';
 import { getCertainData } from '../../utils';
 import ProvidersCard from '../../components/ProvidersCard/ProvidersCard';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
@@ -13,7 +13,7 @@ export default function Movie() {
   const [providers, setProviders] = useState<ProvidersProps
   | undefined>({} as ProvidersProps);
   const [similars, setSimilars] = useState([] as MovieDetailsProps[]);
-  const [cast, setCast] = useState([] as MovieDetailsProps[]);
+  const [cast, setCast] = useState<CastDetailsProps[]>([]);
 
   const { id } = useParams();
   const imageUrl = import.meta.env.VITE_IMG;
@@ -32,8 +32,7 @@ export default function Movie() {
       setMovie(data);
       setProviders(providersData.results.US);
       setSimilars(similarData.results);
-      setCast(castData.results);
-      console.log(castData);
+      setCast(castData.cast);
     };
     getData();
   }, [id]);
@@ -68,12 +67,11 @@ export default function Movie() {
             <p>{`Duration ${hoursWatch.toFixed(0)}h ${minutesWath}m`}</p>
             <div>
               <p>Genres</p>
-              {genres?.map(({ name }) => <p key={ name }>{name}</p>)}
+              {genres?.slice(0, 3)?.map(({ name }) => <p key={ name }>{name}</p>)}
             </div>
             <p>{overview}</p>
             <div>
-              {/* colocar o cast aqui, acho que vai ter que criar outro componente para fazer isso */}
-              <MovieCarousel movies={ similars.slice(0, 12) } text="Cast" />
+              <MovieCarousel movies={ cast?.slice(0, 12) } text="Cast" />
             </div>
             {homepage
             && <p>

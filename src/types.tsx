@@ -90,3 +90,39 @@ export type UserTypes = {
   include_adult: boolean;
   username: string;
 };
+
+export type CastProps = {
+  cast: CastDetailsProps[];
+  crew: CrewDetailsProps[];
+  id: number;
+};
+
+export type CastDetailsProps = {
+  adult: boolean;
+  cast_id: number;
+  character: string;
+  credit_id: string;
+  gender: number;
+  id: number;
+  known_for_department: string;
+  name: string;
+  order: number;
+  original_name: string;
+  popularity: number;
+  profile_path?: string;
+  title?: string;
+};
+
+export type CrewDetailsProps = {
+  adult: boolean;
+  credit_id: number;
+  department: string;
+  gender: number;
+  id: number;
+  job: string;
+  known_for_department: string;
+  name: string;
+  original_name: string;
+  popularity: number;
+  profile_path?: string;
+};
