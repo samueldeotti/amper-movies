@@ -54,9 +54,6 @@ export default function Header() {
   const handleLogOut = () => {
     localStorage.removeItem('user');
     setUser({} as UserTypes);
-    localStorage.removeItem('seenRecently');
-    // tentar pensar numa solução mehlor, pq aqui, quando o usario deslogar, nunca mais vai ser possivel ver os filmes que ele ja viu, pois, o user vem da API, mas o seenRecently vem do localstorage
-
     navigate('/'); // verificar se fica uma melhor opção deixar o usuario na mesma pagina ou redirecionar para a home
   };
 

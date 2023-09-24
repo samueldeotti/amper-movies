@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { MovieProps } from '../../types';
+import { MovieDetailsProps, MovieProps } from '../../types';
 
 type MovieCardProps = {
-  movie: MovieProps;
+  movie: MovieProps | MovieDetailsProps;
 };
 
 export default function MovieCard({ movie }: MovieCardProps) {

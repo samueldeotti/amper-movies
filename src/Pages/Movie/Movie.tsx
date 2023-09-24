@@ -6,11 +6,14 @@ import { useParams } from 'react-router-dom';
 import { MovieDetailsProps, ProvidersProps } from '../../types';
 import { getCertainData } from '../../utils';
 import ProvidersCard from '../../components/ProvidersCard/ProvidersCard';
+import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
 
 export default function Movie() {
   const [movie, setMovie] = useState({} as MovieDetailsProps);
   const [providers, setProviders] = useState<ProvidersProps
   | undefined>({} as ProvidersProps);
+  const [similars, setSimilars] = useState([] as MovieDetailsProps[]);
+  const [cast, setCast] = useState([] as MovieDetailsProps[]);
 
   const { id } = useParams();
   const imageUrl = import.meta.env.VITE_IMG;
@@ -24,8 +27,13 @@ export default function Movie() {
           .stringify([...seenRecently, data.id]));
       }
       const providersData = await getCertainData(`movie/${id}/watch/providers`);
-      setProviders(providersData.results.US);
+      const similarData = await getCertainData(`movie/${id}/similar`);
+      const castData = await getCertainData(`movie/${id}/credits`);
       setMovie(data);
+      setProviders(providersData.results.US);
+      setSimilars(similarData.results);
+      setCast(castData.results);
+      console.log(castData);
     };
     getData();
   }, [id]);
@@ -42,6 +50,10 @@ export default function Movie() {
     vote_average,
   } = movie;
 
+  const hoursWatch = Math.abs(+runtime / 60);
+  const minutesWath = (hoursWatch - Math.floor(hoursWatch))
+    .toFixed(2).toString().split('.')[1];
+
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
@@ -52,13 +64,17 @@ export default function Movie() {
             <p>{tagline}</p>
             <p>{Number(vote_average).toFixed(1)}</p>
             <img src={ imageUrl + poster_path } alt="" />
-            <p>{`Release Date ${release_date}`}</p>
-            <p>{`Duration ${runtime} minutes`}</p>
+            <p>{release_date?.split('-')[0]}</p>
+            <p>{`Duration ${hoursWatch.toFixed(0)}h ${minutesWath}m`}</p>
             <div>
               <p>Genres</p>
               {genres?.map(({ name }) => <p key={ name }>{name}</p>)}
             </div>
             <p>{overview}</p>
+            <div>
+              {/* colocar o cast aqui, acho que vai ter que criar outro componente para fazer isso */}
+              <MovieCarousel movies={ similars.slice(0, 12) } text="Cast" />
+            </div>
             {homepage
             && <p>
               To learn more
@@ -70,6 +86,9 @@ export default function Movie() {
                 : (<ProvidersCard providers={ providers } />)}
             </div>
             <p>Similars</p>
+            <div>
+              <MovieCarousel movies={ similars.slice(0, 12) } text="More like this" />
+            </div>
           </div>
 
         )}

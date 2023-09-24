@@ -34,8 +34,7 @@ export default function Home() {
             <MovieCarousel movies={ upcoming } text="Upcoming" />
             <MovieCarousel movies={ topRated } text="Top rated" />
             {recentlyMovies.length
-            && <MovieCarousel movies={ recentlyMovies } text="Seen Recently" />}
-
+            && <MovieCarousel movies={ recentlyMovies } text="Recently viewed" />}
           </>
         )}
     </div>

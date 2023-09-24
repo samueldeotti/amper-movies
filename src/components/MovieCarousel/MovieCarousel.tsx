@@ -1,8 +1,8 @@
 import MovieCard from '../MovieCard/MovieCard';
-import { MovieProps } from '../../types';
+import { MovieDetailsProps, MovieProps } from '../../types';
 
 type MovieCardProps = {
-  movies: MovieProps[];
+  movies: MovieProps[] | MovieDetailsProps[];
   text: string
 };
 
