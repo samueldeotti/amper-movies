@@ -5,6 +5,7 @@ import Layout from './Pages/Layout/Layout';
 import Movie from './Pages/Movie/Movie';
 import SearchedMovies from './Pages/SearchedMovies/SearchedMovies';
 import Person from './Pages/Person/Person';
+import Favorites from './Pages/Favorites/Favorites';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/genre/:id/:name" element={ <SearchedMovies /> } />
         <Route path="/search?" element={ <SearchedMovies /> } />
         <Route path="/person/:name/:id" element={ <Person /> } />
+        <Route path="/movies/favorites" element={ <Favorites /> } />
       </Route>
       {/* <Route path='/*' element={ <NotFound /> }></Route> */}
     </Routes>

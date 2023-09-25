@@ -25,6 +25,7 @@ const baseUrl = axios.create({
     include_adult: false,
     language: 'en-US', // fazer com que essa lingua seja responsiva com o q tem salvo no localstorage, fazer com que a pagina também seja responsiva com o q tem salvo no localstorage
   },
+  headers,
 });
 
 const searchUrl = axios.create({
@@ -64,22 +65,27 @@ const getMoviesByName = async (searchMovie:string) => {
   return data.results.filter((movie: MovieProps) => movie.backdrop_path && movie.poster_path && movie.overview && movie.title && movie.vote_average > 0);
 };
 
-const createSession = async (tokenUser: string) => {
-  const { data } = await axios.post(`${BASE_URL}authentication/session/new`, JSON.stringify({ request_token: tokenUser }), { headers });
-  const userData = await getUserData(data.session_id);
-  return userData;
-};
-
 const getUserData = async (tokenUser: string) => {
   const response = await fetch(`https://api.themoviedb.org/3/account?api_key=${TOKEN}&session_id=${tokenUser}`);
   const data = await response.json();
   return data;
 };
 
+const createSession = async (tokenUser: string) => {
+  const { data } = await axios.post(`${BASE_URL}authentication/session/new`, JSON.stringify({ request_token: tokenUser }), { headers });
+  const userData = await getUserData(data.session_id);
+  return userData;
+};
+
 const addRating = async (movieId: string, rating: number) => {
   const { data } = await axios.post(`${BASE_URL}movie/${movieId}/rating?`, JSON.stringify({ value: rating }), { headers });
-  console.log(data);
+  return data;
+};
+
+const handleFavorite = async (movieId: string | number, accountId: number, fav: boolean) => {
+  const { data } = await axios.post(`${BASE_URL}account/${accountId}/favorite?`, { media_type: 'movie', media_id: movieId, favorite: fav }, { headers });
+  return data;
 };
 
 export { getHomeMovies,
-  getMoviesByName, createSession, getUserData, getCertainData, addRating };
+  getMoviesByName, createSession, getUserData, getCertainData, addRating, handleFavorite };
