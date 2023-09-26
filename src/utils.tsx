@@ -54,7 +54,7 @@ const getHomeMovies = async () => {
 
   const seenRecently = JSON.parse(localStorage.getItem('seenRecently') || '[]');
   if (seenRecently.length) {
-    recentlyMovies = await Promise.all(seenRecently.map(async (movieId: MovieDetailsProps) => getCertainData(`movie/${movieId}`)));
+    recentlyMovies = await Promise.all(seenRecently.reverse().slice(0, 20).map(async (movieId: MovieDetailsProps) => getCertainData(`movie/${movieId}`)));
   }
 
   return { popularData, trendingData, upcomingData, topRatedData, recentlyMovies };
