@@ -5,16 +5,17 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
 import { CastDetailsProps, MovieDetailsProps, ProvidersProps } from '../../types';
-import { handleFavorite, addRating, getCertainData } from '../../utils';
+import { addRating, customStyles, getCertainData, handleLoggedMovies } from '../../utils';
 import ProvidersCard from '../../components/ProvidersCard/ProvidersCard';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
 
 export default function Movie() {
-  const [movie, setMovie] = useState({} as MovieDetailsProps);
-  const [providers, setProviders] = useState<ProvidersProps
-  | undefined>({} as ProvidersProps);
-  const [similars, setSimilars] = useState([] as MovieDetailsProps[]);
-  const [cast, setCast] = useState<CastDetailsProps[]>([]);
+  const [infoMovie, setMovieInfo] = useState({
+    movie: {} as MovieDetailsProps,
+    providers: {} as ProvidersProps,
+    similars: [] as MovieDetailsProps[],
+    cast: [] as CastDetailsProps[],
+  });
   const [rating, setRating] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -32,13 +33,17 @@ export default function Movie() {
       const providersData = await getCertainData(`movie/${id}/watch/providers`);
       const similarData = await getCertainData(`movie/${id}/similar`);
       const castData = await getCertainData(`movie/${id}/credits`);
-      setMovie(data);
-      setProviders(providersData.US);
-      setSimilars(similarData);
-      setCast(castData.cast);
+      setMovieInfo({
+        movie: data,
+        providers: providersData.US,
+        similars: similarData,
+        cast: castData.cast,
+      });
     };
     getData();
   }, [id]);
+
+  const { movie, providers, similars, cast } = infoMovie;
 
   const {
     genres,
@@ -50,60 +55,42 @@ export default function Movie() {
     tagline,
     title,
     vote_average,
-  } = movie;
+  } = infoMovie.movie;
 
-  const hoursWatch = Math.abs(+runtime / 60);
-  const minutesWath = (hoursWatch - Math.floor(hoursWatch))
-    .toFixed(2).toString().split('.')[1];
+  const hoursWatch = Math.floor(+runtime / 60);
+  const minutesWath = +runtime % 60;
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
-  const customStyles = {
-    content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-    },
-  };
-
-  const handleFav = async () => {
+  const handleLogged = async (type?: 'favorite' | 'watchlist') => {
     const savedUser = JSON.parse(localStorage.getItem('user') as string) || {} as any;
     if (savedUser.id) {
-      const response = await handleFavorite(id as string, savedUser.id, true);
-      alert(response.success ? 'Added to favorites' : 'Something went wrong');
+      await (type
+        ? handleLoggedMovies(id as string, savedUser.id, true, type)
+        : addRating(id as string, rating)
+      );
     } else {
       const data = await getCertainData('https://api.themoviedb.org/3/authentication/token/new');
-      window.location.href = `https://www.themoviedb.org/authenticate/${data.request_token}?redirect_to=https://ampermovies.surge.sh`;
+      window.location.href = `https://www.themoviedb.org/authenticate/${data.request_token}?redirect_to=https://ampermovies.surge.sh/movie/${id}`;
     }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const savedUser = JSON.parse(localStorage.getItem('user') as string) || {} as any;
-
-    if (savedUser.id) {
-      const response = await addRating(id as string, rating);
-      closeModal();
-      alert(response.success ? 'Rating added/updated' : 'Something went wrong');
-    } else {
-      const data = await getCertainData('https://api.themoviedb.org/3/authentication/token/new');
-      window.location.href = `https://www.themoviedb.org/authenticate/${data.request_token}?redirect_to=https://ampermovies.surge.sh`;
-    }
+    handleLogged();
+    closeModal();
   };
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      {!id ? <p>Loading...</p>
+      {!movie.id ? <p>Loading...</p>
         : (
           <div>
             <h2>{title}</h2>
             <p>{tagline}</p>
-            <div>
+            <div style={ { display: 'flex', justifyContent: 'center' } }>
               <div>
                 <p>TMDB Rating</p>
                 <p>{Number(vote_average).toFixed(1)}</p>
@@ -116,14 +103,20 @@ export default function Movie() {
               </div>
               <div>
                 <p>Add to your favorites</p>
-                <button onClick={ handleFav }>
+                <button onClick={ () => handleLogged('favorite') }>
                   <img src="/favHearth.png" alt="" style={ { width: 50 } } />
+                </button>
+              </div>
+              <div>
+                <p>Add to your watchlist</p>
+                <button onClick={ () => handleLogged('watchlist') }>
+                  <img src="/wathclist.png" alt="" style={ { width: 50 } } />
                 </button>
               </div>
             </div>
             <img src={ imageUrl + poster_path } alt="" />
             <p>{release_date?.split('-')[0]}</p>
-            <p>{`Duration ${hoursWatch.toFixed(0)}h ${minutesWath}m`}</p>
+            <p>{`Duration ${hoursWatch}h ${minutesWath}m`}</p>
             <div>
               <p>Genres</p>
               {genres?.slice(0, 3)?.map(({ name }) => <p key={ name }>{name}</p>)}
@@ -152,7 +145,7 @@ export default function Movie() {
               isOpen={ isOpen }
               onRequestClose={ closeModal }
               style={ customStyles }
-              contentLabel="Example Modal"
+              contentLabel="Rate Modal"
               ariaHideApp={ false }
             >
               <div>
@@ -172,9 +165,7 @@ export default function Movie() {
                 <button type="submit">Rate</button>
               </form>
             </Modal>
-
           </div>
-
         )}
     </>
   );

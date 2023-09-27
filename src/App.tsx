@@ -5,7 +5,7 @@ import Layout from './Pages/Layout/Layout';
 import Movie from './Pages/Movie/Movie';
 import SearchedMovies from './Pages/SearchedMovies/SearchedMovies';
 import Person from './Pages/Person/Person';
-import Favorites from './Pages/Favorites/Favorites';
+import LoggedPages from './Pages/LoggedPages/LoggedPages';
 
 function App() {
   return (
@@ -16,7 +16,9 @@ function App() {
         <Route path="/genre/:id/:name" element={ <SearchedMovies /> } />
         <Route path="/search?" element={ <SearchedMovies /> } />
         <Route path="/person/:name/:id" element={ <Person /> } />
-        <Route path="/movies/favorites" element={ <Favorites /> } />
+        <Route path="/movies/favorite" element={ <LoggedPages /> } />
+        <Route path="/movies/watchlist" element={ <LoggedPages /> } />
+        <Route path="/movies/rated" element={ <LoggedPages /> } />
       </Route>
       {/* <Route path='/*' element={ <NotFound /> }></Route> */}
     </Routes>

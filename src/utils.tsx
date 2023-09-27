@@ -82,10 +82,26 @@ const addRating = async (movieId: string, rating: number) => {
   return data;
 };
 
-const handleFavorite = async (movieId: string | number, accountId: number, fav: boolean) => {
-  const { data } = await axios.post(`${BASE_URL}account/${accountId}/favorite?`, { media_type: 'movie', media_id: movieId, favorite: fav }, { headers });
+const deleteRating = async (movieId: number, sessionId: number) => {
+  const { data } = await axios.delete(`${BASE_URL}movie/${movieId}/rating?session_id=${sessionId}`, { headers });
   return data;
 };
 
+const handleLoggedMovies = async (movieId: string | number, accountId: number, value: boolean, type: string) => {
+  const { data } = await axios.post(`${BASE_URL}account/${accountId}/${type}?`, { media_type: 'movie', media_id: movieId, [type]: value }, { headers });
+  return data;
+};
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+
 export { getHomeMovies,
-  getMoviesByName, createSession, getUserData, getCertainData, addRating, handleFavorite };
+  getMoviesByName, createSession, getUserData, getCertainData, addRating, handleLoggedMovies, customStyles, deleteRating };

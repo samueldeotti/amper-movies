@@ -81,8 +81,8 @@ export default function Header() {
         <div>
           <details>
             <summary>{user.username}</summary>
-            <Link to="/movies/favorites">Favorites Movies</Link>
-            <Link to="/watchlist">Watchlist</Link>
+            <Link to="/movies/favorite">Favorites Movies</Link>
+            <Link to="/movies/watchlist">Watchlist</Link>
             <Link to="/movies/rated">Rated Movies</Link>
             <a href={ `https://www.themoviedb.org/u/${user.username}` } target="_blanck">See Profile</a>
             <button onClick={ handleLogOut }>Log Out</button>
