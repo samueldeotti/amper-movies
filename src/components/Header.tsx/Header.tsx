@@ -34,27 +34,20 @@ export default function Header() {
     navigate(`/search?q=${search}`);
   };
 
-  const clearInput = () => {
-    setSearch('');
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
-  };
+  const clearInput = () => setSearch('');
 
   const handleClick = async () => {
     if (!user.id) {
       const data = await getCertainData('https://api.themoviedb.org/3/authentication/token/new');
       window.location.href = `https://www.themoviedb.org/authenticate/${data.request_token}?redirect_to=https://ampermovies.surge.sh/`;
     }
-    // alert('Você ira ser redirecionado');
-    // talvez futuramente colocar uma verificação para ver mesmo se o usuario quer ser redirecionado ou nao
   };
 
   const handleLogOut = () => {
     localStorage.removeItem('user');
     setUser({} as UserTypes);
-    navigate('/'); // verificar se fica uma melhor opção deixar o usuario na mesma pagina ou redirecionar para a home
+    window.location.reload();
+    /* navigate('/'); */ // verificar se fica uma melhor opção deixar o usuario na mesma pagina ou redirecionar para a home
   };
 
   return (
@@ -71,7 +64,7 @@ export default function Header() {
             type="text"
             placeholder="Pesquisar"
             value={ search }
-            onChange={ handleChange }
+            onChange={ ({ target }) => setSearch(target.value) }
           />
         </label>
         <button type="submit">Lupa</button>

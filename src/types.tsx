@@ -164,4 +164,8 @@ export type ActorMoviesProps = {
   video: boolean;
   vote_average: number;
   vote_count: number;
+  known_for: MovieProps[];
+  profile_path: string;
+  known_for_department: string;
+  name: string;
 };

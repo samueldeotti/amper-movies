@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/naming-convention */
 import axios from 'axios';
-import { MovieDetailsProps, MovieProps } from './types';
+import { ActorMoviesProps, MovieDetailsProps, MovieProps } from './types';
 
 export const TOKEN = import.meta.env.VITE_TOKEN;
 const BASE_URL = import.meta.env.VITE_BASE;
@@ -28,15 +28,6 @@ const baseUrl = axios.create({
   headers,
 });
 
-const searchUrl = axios.create({
-  baseURL: SEARCH_URL,
-  params: {
-    api_key: TOKEN,
-    include_adult: false,
-    language: 'en-US',
-  },
-});
-
 const getCertainData = async (url: string) => {
   const { data } = await baseUrl.get(url);
   if (data.results && !url.includes('watch/providers')) {
@@ -60,9 +51,13 @@ const getHomeMovies = async () => {
   return { popularData, trendingData, upcomingData, topRatedData, recentlyMovies };
 };
 
-const getMoviesByName = async (searchMovie:string) => {
-  const { data } = await searchUrl.get(`https://api.themoviedb.org/3/search/movie?query=${searchMovie}&include_adult=false&language=en-US`);
-  return data.results.filter((movie: MovieProps) => movie.backdrop_path && movie.poster_path && movie.overview && movie.title && movie.vote_average > 0);
+const getSearched = async (searchParam:string) => {
+  const moviesData = await baseUrl.get(`search/movie?query=${searchParam}`);
+  const peopleData = await baseUrl.get(`search/person?query=${searchParam}`);
+  return {
+    movie: moviesData.data.results.filter((movie: MovieProps) => movie.backdrop_path && movie.poster_path && movie.overview && movie.title && movie.vote_average > 0),
+    people: peopleData.data.results.filter((person: ActorMoviesProps) => person.known_for.length && person.profile_path),
+  };
 };
 
 const getUserData = async (tokenUser: string) => {
@@ -104,4 +99,4 @@ const customStyles = {
 };
 
 export { getHomeMovies,
-  getMoviesByName, createSession, getUserData, getCertainData, addRating, handleLoggedMovies, customStyles, deleteRating };
+  getSearched, createSession, getUserData, getCertainData, addRating, handleLoggedMovies, customStyles, deleteRating };
