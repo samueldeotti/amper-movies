@@ -38,10 +38,7 @@ export default function SearchedMovies() {
               {persons.length ? persons.map((person) => (
                 <PersonCard
                   key={ person.id }
-                  name={ person.name }
-                  know_for={ person.known_for_department }
-                  profile_path={ person.profile_path }
-                  id={ person.id }
+                  personInfo={ person }
                 />
               )) : (<p>No people found</p>)}
             </div>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { CastDetailsProps } from '../../types';
 
 type CastCardProps = {
-  cast: CastDetailsProps
+  cast: CastDetailsProps;
 };
 
 export default function CastCard({ cast }: CastCardProps) {

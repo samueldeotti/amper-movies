@@ -5,12 +5,13 @@ import { ActorMoviesProps, MovieDetailsProps, MovieProps } from './types';
 
 export const TOKEN = import.meta.env.VITE_TOKEN;
 const BASE_URL = import.meta.env.VITE_BASE;
-const SEARCH_URL = import.meta.env.VITE_SEARCH;
 const AUTHORIZATION = import.meta.env.VITE_AUTHORIZATION;
 
 axios.defaults.baseURL = BASE_URL;
 axios.defaults.headers.common.Authorization = TOKEN;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+const savedUser = JSON.parse(localStorage.getItem('user') as string) || {};
 
 const headers = {
   accept: 'application/json',
@@ -22,8 +23,8 @@ const baseUrl = axios.create({
   baseURL: BASE_URL,
   params: {
     api_key: TOKEN,
-    include_adult: false,
-    language: 'en-US', // fazer com que essa lingua seja responsiva com o q tem salvo no localstorage, fazer com que a pagina também seja responsiva com o q tem salvo no localstorage
+    include_adult: savedUser.include_adult,
+    language: savedUser.id ? `${savedUser.iso_639_1}-${savedUser.iso_3166_1}` : 'en-US', // fazer com que essa lingua seja responsiva com o q tem salvo no localstorage, fazer com que a pagina também seja responsiva com o q tem salvo no localstorage
   },
   headers,
 });

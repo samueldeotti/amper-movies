@@ -17,6 +17,8 @@ export type MovieProps = {
   video: boolean;
   vote_average: number;
   vote_count: number;
+  name?: string;
+  first_air_date?: string;
 };
 
 export type HomeMoviesProps = {
@@ -30,6 +32,18 @@ export type HomeMoviesProps = {
 export type GenreProps = {
   id: number;
   name: string;
+};
+
+export type VideoProps = {
+  id: string;
+  iso_639_1: string;
+  iso_3166_1: string;
+  key: string;
+  name?: string;
+  official: boolean;
+  site: string;
+  size: number;
+  type: string;
 };
 
 export type MovieDetailsProps = {
@@ -59,6 +73,7 @@ export type MovieDetailsProps = {
   vote_average: number;
   vote_count: number;
   media_type?: string;
+  videos: { results: VideoProps[] };
 };
 
 export type ProvidersProps = {
@@ -168,4 +183,28 @@ export type ActorMoviesProps = {
   profile_path: string;
   known_for_department: string;
   name: string;
+};
+
+export type ImageDetailsProps = {
+  aspect_ratio: number;
+  file_path: string;
+  height: number;
+  iso_639_1: string | null;
+  vote_average: number;
+  vote_count: number;
+  width: number;
+};
+
+export type ImagesProps = {
+  backdrops: ImageDetailsProps[];
+  logos: ImageDetailsProps[];
+  id: number;
+  posters: ImageDetailsProps[];
+};
+
+export type UserInfoMovie = {
+  id: number;
+  favorite: boolean;
+  rated: boolean;
+  watchlist: boolean;
 };
