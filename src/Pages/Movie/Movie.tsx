@@ -1,15 +1,20 @@
+/* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable complexity */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable react/jsx-closing-tag-location */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
+import { useTranslation } from 'react-i18next';
 import { CastDetailsProps,
   MovieDetailsProps,
   ProvidersProps, ImageDetailsProps, UserInfoMovie } from '../../types';
-import { addRating, customStyles, getCertainData, handleLoggedMovies } from '../../utils';
+import { addRating,
+  customStyles, formattedDate, getCertainData, handleLoggedMovies } from '../../utils';
 import ProvidersCard from '../../components/ProvidersCard/ProvidersCard';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
+import MediaButtons from '../../components/MediaButtons/MediaButtons';
 
 export default function Movie() {
   const [infoMovie, setMovieInfo] = useState({
@@ -22,6 +27,7 @@ export default function Movie() {
   const [userMovieInfo, setUserMovieInfo] = useState({} as UserInfoMovie);
   const [rating, setRating] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
 
   const { id } = useParams();
   const imageUrl = import.meta.env.VITE_IMG;
@@ -47,11 +53,13 @@ export default function Movie() {
       &include_image_language=en,null`);
       const { backdrops, logos, posters } = imagesData;
 
+      console.log(navigator.languages);
+
       setMovieInfo({
         movie: data,
         providers: savedUser.id
           ? providersData.results[savedUser.iso_3166_1]
-          : providersData.results.US,
+          : providersData.results[navigator.languages[0].split('-')[1]],
         similars: similarData,
         cast: castData.cast,
         images: [backdrops, logos, posters].flat(),
@@ -110,11 +118,17 @@ export default function Movie() {
             <p>{tagline}</p>
             <div style={ { display: 'flex', justifyContent: 'center' } }>
               <div>
-                <p>TMDB Rating</p>
-                <p>{Number(vote_average).toFixed(1)}</p>
+                <p>{ t('movie.tmdb') }</p>
+                <p>
+                  {vote_average > +0
+                    ? Number(vote_average).toFixed(1) : t('movie.released')}
+                </p>
               </div>
               <div>
-                <p>{userMovieInfo.rated ? 'Change your rate' : 'Add your rate'}</p>
+                <p>
+                  {userMovieInfo.rated
+                    ? t('movie.rate.change') : t('movie.rate.add')}
+                </p>
                 <button onClick={ openModal }>
                   <img src="/starIcon.png" alt="" style={ { width: 50 } } />
                 </button>
@@ -122,7 +136,7 @@ export default function Movie() {
               <div>
                 <p>
                   {userMovieInfo.favorite
-                    ? 'Remove from favorites' : 'Add to your favorites'}
+                    ? t('movie.favorite.remove') : t('movie.favorite.add')}
                 </p>
                 <button onClick={ () => handleLogged('favorite') }>
                   <img src="/favHearth.png" alt="" style={ { width: 50 } } />
@@ -131,7 +145,7 @@ export default function Movie() {
               <div>
                 <p>
                   {userMovieInfo.watchlist
-                    ? 'Remove from the watchlist' : 'Add to your watchlist'}
+                    ? t('movie.watchlist.remove') : t('movie.watchlist.add')}
                 </p>
                 <button onClick={ () => handleLogged('watchlist') }>
                   <img src="/wathclist.png" alt="" style={ { width: 50 } } />
@@ -139,38 +153,44 @@ export default function Movie() {
               </div>
             </div>
             <img src={ imageUrl + poster_path } alt="" />
+            <MediaButtons videos={ videos } images={ images } />
+            <p>
+              {/* ESSAS VERIFCAÇÕES PODEM SER FEITAS COM O ITEM, MOVIE.STATUS === RELEASED */}
+              {vote_average > +0
+                ? release_date?.split('-')[0]
+                : `${t('movie.releaseDate')} ${formattedDate(release_date)}`}
+            </p>
+            <p>
+              {minutesWath && hoursWatch
+                ? `${t('movie.duration')} ${hoursWatch}h ${minutesWath}m`
+                : t('movie.notInformed')}
+            </p>
             <div>
-              <button>
-                {`Videos ${videos.results.length > 99 ? '99+' : videos.results.length}`}
-              </button>
-              <button>
-                {`Photos ${images.length > 99 ? '99+' : images.length}`}
-              </button>
-            </div>
-            <p>{release_date?.split('-')[0]}</p>
-            <p>{`Duration ${hoursWatch}h ${minutesWath}m`}</p>
-            <div>
-              <p>Genres</p>
+              <p>{t('movie.genres')}</p>
               {genres?.slice(0, 3)?.map(({ name }) => <p key={ name }>{name}</p>)}
             </div>
             <p>{overview}</p>
-            <div>
-              <Link to={ `/cast/${movie.id}` }>See the full cast</Link>
-              <MovieCarousel movies={ cast?.slice(0, 12) } text="Cast" />
-            </div>
+            {!!cast.length && <div>
+              <Link to={ `/cast/${movie.id}` }>{t('movie.seeFullCast')}</Link>
+              <MovieCarousel movies={ cast?.slice(0, 12) } text={ t('movie.cast') } />
+            </div>}
             {homepage
             && <p>
-              To learn more
+              {t('movie.learnMore')}
               <a href={ homepage } target="blanck">{` ${title}`}</a>
             </p>}
             <div>
-              <p>Where to Watch</p>
-              { !providers ? <p>No services found</p>
+              <p>{t('movie.whereWatch')}</p>
+              { !providers ? <p>{t('movie.noServicesFound')}</p>
                 : (<ProvidersCard providers={ providers } />)}
             </div>
-            <p>Similars</p>
             <div>
-              <MovieCarousel movies={ similars.slice(0, 12) } text="More like this" />
+              {!!similars.length
+              && <p>{t('movie.similars')}</p>
+              && <MovieCarousel
+                movies={ similars.slice(0, 12) }
+                text={ t('movie.moreLikeThis') }
+              />}
             </div>
 
             <Modal
@@ -181,7 +201,7 @@ export default function Movie() {
               ariaHideApp={ false }
             >
               <div>
-                <p>Rate this</p>
+                <p>{t('movie.rateThis')}</p>
                 <p>{title}</p>
               </div>
               <button onClick={ closeModal }>X</button>
@@ -194,7 +214,7 @@ export default function Movie() {
                   value={ rating }
                   onChange={ ({ target }) => setRating(+target.value) }
                 />
-                <button type="submit">Rate</button>
+                <button type="submit">{t('movie.rate.rateText')}</button>
               </form>
             </Modal>
           </div>

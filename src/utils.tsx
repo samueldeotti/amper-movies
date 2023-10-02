@@ -24,14 +24,14 @@ const baseUrl = axios.create({
   params: {
     api_key: TOKEN,
     include_adult: savedUser.include_adult,
-    language: savedUser.id ? `${savedUser.iso_639_1}-${savedUser.iso_3166_1}` : 'en-US', // fazer com que essa lingua seja responsiva com o q tem salvo no localstorage, fazer com que a pagina também seja responsiva com o q tem salvo no localstorage
+    language: navigator.languages[0], // fazer com que essa lingua seja responsiva com o q tem salvo no localstorage, fazer com que a pagina também seja responsiva com o q tem salvo no localstorage
   },
   headers,
 });
 
 const getCertainData = async (url: string) => {
   const { data } = await baseUrl.get(url);
-  if (data.results && !url.includes('watch/providers')) {
+  if (data.results && !url.includes('watch/providers') && !url.includes('upcoming')) {
     return data.results.filter((movie: MovieProps) => movie.backdrop_path && movie.poster_path && movie.overview && movie.title && movie.vote_average > 0);
   }
   return data;
@@ -40,16 +40,17 @@ const getCertainData = async (url: string) => {
 const getHomeMovies = async () => {
   const popularData = await getCertainData('movie/popular');
   const trendingData = await getCertainData('trending/movie/day');
-  const upcomingData = await getCertainData('movie/upcoming');
+  const upcomingData = await getCertainData('movie/upcoming?primary_release_date.gte=2023-10-01&sort_by=popularity.desc');
   const topRatedData = await getCertainData('movie/top_rated');
-  let recentlyMovies = [];
+  const filterUpcoming = upcomingData.results.filter((movie: MovieProps) => movie.poster_path && movie.overview && movie.title);
 
+  let recentlyMovies = [];
   const seenRecently = JSON.parse(localStorage.getItem('seenRecently') || '[]');
   if (seenRecently.length) {
     recentlyMovies = await Promise.all(seenRecently.reverse().slice(0, 20).map(async (movieId: MovieDetailsProps) => getCertainData(`movie/${movieId}`)));
   }
 
-  return { popularData, trendingData, upcomingData, topRatedData, recentlyMovies };
+  return { popularData, trendingData, filterUpcoming, topRatedData, recentlyMovies };
 };
 
 const getSearched = async (searchParam:string) => {
@@ -99,5 +100,10 @@ const customStyles = {
   },
 };
 
+const formattedDate = (date: string) => {
+  const [year, month, day] = date.split('-');
+  return `${month}/${day}/${year}`;
+};
+
 export { getHomeMovies,
-  getSearched, createSession, getUserData, getCertainData, addRating, handleLoggedMovies, customStyles, deleteRating };
+  getSearched, createSession, getUserData, getCertainData, addRating, handleLoggedMovies, customStyles, deleteRating, formattedDate };

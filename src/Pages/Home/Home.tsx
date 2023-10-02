@@ -1,20 +1,23 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getHomeMovies } from '../../utils';
 import { HomeMoviesProps } from '../../types';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
 
 export default function Home() {
   const [homeMovies, setHomeMovies] = useState({} as HomeMoviesProps);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const getData = async () => {
       const { popularData,
-        trendingData, upcomingData, topRatedData, recentlyMovies,
+        trendingData, filterUpcoming, topRatedData, recentlyMovies,
       } = await getHomeMovies();
+
       setHomeMovies({
         popular: popularData,
         trending: trendingData,
-        upcoming: upcomingData,
+        upcoming: filterUpcoming,
         topRated: topRatedData,
         recentlyMovies,
       });
@@ -29,12 +32,16 @@ export default function Home() {
       {Object.keys(homeMovies).length === 0 ? <p>Loading...</p>
         : (
           <>
-            <MovieCarousel movies={ popular } text="Popular" />
-            <MovieCarousel movies={ trending } text="Trending today" />
-            <MovieCarousel movies={ upcoming } text="Upcoming" />
-            <MovieCarousel movies={ topRated } text="Top rated" />
+            <MovieCarousel movies={ popular } text={ t('home.popular') } />
+            <MovieCarousel movies={ trending } text={ t('home.trending') } />
+            <MovieCarousel
+              movies={ upcoming }
+              text={ t('home.upcoming') }
+              type="Upcoming"
+            />
+            <MovieCarousel movies={ topRated } text={ t('home.rated') } />
             {recentlyMovies.length
-            && <MovieCarousel movies={ recentlyMovies } text="Recently viewed" />}
+            && <MovieCarousel movies={ recentlyMovies } text={ t('home.viewed') } />}
           </>
         )}
     </div>

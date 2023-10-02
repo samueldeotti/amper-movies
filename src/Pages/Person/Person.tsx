@@ -1,14 +1,18 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { getCertainData } from '../../utils';
-import { ActorMoviesProps, PersonProps } from '../../types';
+import { ActorMoviesProps, ImageDetailsProps, PersonProps } from '../../types';
 import MovieCard from '../../components/MovieCard/MovieCard';
+import MediaButtons from '../../components/MediaButtons/MediaButtons';
 
 export default function Person() {
   const [person, setPerson] = useState({} as PersonProps);
   const [allMovies, setAllMovies] = useState<ActorMoviesProps[]>([]);
+  const [images, setImages] = useState<ImageDetailsProps[]>([]);
 
+  const { t } = useTranslation();
   const { id } = useParams();
   const imageUrl = import.meta.env.VITE_IMG;
 
@@ -16,8 +20,11 @@ export default function Person() {
     const getData = async () => {
       const personData = await getCertainData(`person/${id}`);
       const moviesData = await getCertainData(`person/${id}/combined_credits`);
+      const imagesData = await getCertainData(`person/${id}/images`);
+
       setPerson(personData);
       setAllMovies(moviesData.cast);
+      setImages(imagesData.profiles);
     };
     getData();
   }, [id]);
@@ -47,10 +54,11 @@ export default function Person() {
     <div>
       <p>{name}</p>
       <img src={ imageUrl + profile_path } alt="" />
+      <MediaButtons images={ images } />
       <p>{biography}</p>
-      <p>{`Birthday: ${formatedBirthday}`}</p>
+      <p>{`${t('person.birthday')}: ${formatedBirthday || 'Unknown'}`}</p>
       <div>
-        <p>Know for</p>
+        <p>{t('person.knowFor')}</p>
         {relevantMovies
           ?.splice(0, 4).map((movie) => (<MovieCard
               movie={ movie }
@@ -59,7 +67,7 @@ export default function Person() {
           />))}
       </div>
       <div>
-        <p>Movies</p>
+        <p>{t('person.participated')}</p>
         {partipantMovies
           ?.map((movie) => (<MovieCard
               movie={ movie }

@@ -5,6 +5,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { BsFillPersonFill } from 'react-icons/bs';
+import { useTranslation } from 'react-i18next';
 import { createSession, getCertainData, getSearched } from '../../utils';
 import { UserTypes } from '../../types';
 import MovieCard from '../MovieCard/MovieCard';
@@ -25,6 +26,8 @@ export default function Header() {
 
   const [searchParams] = useSearchParams();
   const authToken = searchParams.get('request_token');
+
+  const { t } = useTranslation();
 
   const imageUrl = import.meta.env.VITE_IMG;
 
@@ -50,21 +53,22 @@ export default function Header() {
 
   const clearInput = () => setSearch('');
 
-  // const saveSearch = (movie: any) => {
-  //   savedSearch = JSON.parse(localStorage.getItem('search') as string) || [];
-  //   if (!savedSearch?.find((item: any) => item.id === movie.id)) {
-  //     localStorage.setItem('search', JSON.stringify([...savedSearch, movie]));
-  //   }
-  //   savedSearch = JSON.parse(localStorage.getItem('search') as string);
-  //   clearInput();
-  //   setData([]);
-  //   navigate(`/movie/${movie.id}`);
-  // };
+  const saveSearch = (/* movie: any */) => {
+    // savedSearch = JSON.parse(localStorage.getItem('search') as string) || [];
+    // if (!savedSearch?.find((item: any) => item.id === movie.id)) {
+    //   localStorage.setItem('search', JSON.stringify([...savedSearch, movie]));
+    // }
+    // savedSearch = JSON.parse(localStorage.getItem('search') as string);
+    clearInput();
+    setData([]);
+  };
 
   const hideSavedSearch = () => {
-    setShowResults(false);
-    setData([]);
-    setIsLoading(true);
+    setTimeout(async () => {
+      setShowResults(false);
+      setData([]);
+      setIsLoading(true);
+    }, 100);
   };
 
   const showSavedSearch = () => {
@@ -123,7 +127,7 @@ export default function Header() {
         <label htmlFor="">
           <input
             type="text"
-            placeholder="Pesquisar"
+            placeholder={ t('search.search') }
             value={ search }
             onBlur={ hideSavedSearch }
             onFocus={ showSavedSearch }
@@ -135,11 +139,11 @@ export default function Header() {
           <ul>
             {isLoading && <li>Loading...</li>}
             {!isLoading && !!data.length ? data.slice(0, 8).map((movie: any) => (
-              <li key={ movie.id }>
+              <li key={ movie.id } onClick={ saveSearch }>
                 {movie.title
                   ? <MovieCard movie={ movie } /> : <PersonCard personInfo={ movie } />}
               </li>
-            )) : !isLoading && !!data.length && <li>Nothing found</li>}
+            )) : !isLoading && !!data.length && <li>{t('search.noResults')}</li>}
           </ul>
         )}
         <button type="submit">Lupa</button>
@@ -156,11 +160,11 @@ export default function Header() {
           ) : <BsFillPersonFill />}
           {isMenuVisible && (
             <ul>
-              <li><Link to="/movies/favorite">Favorites Movies</Link></li>
-              <li><Link to="/movies/watchlist">Watchlist</Link></li>
-              <li><Link to="/movies/rated">Rated Movies</Link></li>
-              <li><a href={ `https://www.themoviedb.org/u/${user.username}` } target="_blanck">See Profile</a></li>
-              <li><button onClick={ handleLogOut }>Log Out</button></li>
+              <li><Link to="/movies/favorite">{t('header.favorites')}</Link></li>
+              <li><Link to="/movies/watchlist">{t('header.watchlist')}</Link></li>
+              <li><Link to="/movies/rated">{t('header.rated')}</Link></li>
+              <li><a href={ `https://www.themoviedb.org/u/${user.username}` } target="_blanck">{t('header.profile')}</a></li>
+              <li><button onClick={ handleLogOut }>{t('header.logout')}</button></li>
             </ul>
           )}
         </div>

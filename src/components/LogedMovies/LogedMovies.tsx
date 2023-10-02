@@ -1,5 +1,6 @@
 /* eslint-disable no-alert */
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MovieDetailsProps } from '../../types';
 import { deleteRating, getCertainData, handleLoggedMovies } from '../../utils';
 import MovieCard from '../MovieCard/MovieCard';
@@ -7,6 +8,8 @@ import MovieCard from '../MovieCard/MovieCard';
 export default function LogedMovie() {
   const [movieList, setMovieList] = useState<MovieDetailsProps[]>([]);
   const [isLogged, setIsLogged] = useState(false);
+  const { t } = useTranslation();
+
   const { pathname } = window.location;
   const type = pathname.split('/')[2];
 
@@ -49,7 +52,7 @@ export default function LogedMovie() {
     <div>
       {isLogged ? (
         <>
-          <h1>{`${formatedTitle} Movies`}</h1>
+          <h1>{`${formatedTitle} ${t('logged.movies')}`}</h1>
           {movieList.length ? (
             movieList.map((movie) => (
               <div key={ movie.id }>
@@ -57,18 +60,18 @@ export default function LogedMovie() {
                 <button
                   onClick={ () => handleClick(movie.id) }
                 >
-                  {type.includes('rated') ? 'Remove Rating' : ''}
-                  {type.includes('favorite') ? 'Remove Favorite' : ''}
-                  {type.includes('watchlist') ? 'Remove Watchlist' : ''}
+                  {type.includes('rated') ? t('logged.rated') : ''}
+                  {type.includes('favorite') ? t('logged.favorites') : ''}
+                  {type.includes('watchlist') ? t('logged.watchlist') : ''}
                 </button>
-                <button onClick={ () => navigator.clipboard.writeText(`https://ampermovies.surge.sh/movie/${movie.id}`) }>Share</button>
+                <button onClick={ () => navigator.clipboard.writeText(`https://ampermovies.surge.sh/movie/${movie.id}`) }>{t('logged.Share')}</button>
               </div>
             ))
-          ) : (<p>{'You don\'t have any movies'}</p>)}
+          ) : (<p>{t('logged.dontHave')}</p>)}
         </>
       ) : (
         <div>
-          <p>You need to login to access this page</p>
+          <p>{t('logged.youNeed')}</p>
           <button onClick={ handleLogin }>Login</button>
         </div>
       )}
