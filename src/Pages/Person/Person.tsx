@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { format } from 'date-fns';
 import { getCertainData } from '../../utils';
 import { ActorMoviesProps, ImageDetailsProps, PersonProps } from '../../types';
 import MovieCard from '../../components/MovieCard/MovieCard';
@@ -12,7 +13,7 @@ export default function Person() {
   const [allMovies, setAllMovies] = useState<ActorMoviesProps[]>([]);
   const [images, setImages] = useState<ImageDetailsProps[]>([]);
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { id } = useParams();
   const imageUrl = import.meta.env.VITE_IMG;
 
@@ -41,13 +42,11 @@ export default function Person() {
     .sort((a, b) => +b.popularity - +a.popularity);
 
   const { name, profile_path, biography, birthday } = person;
-  person.birthday = birthday?.replace(/-/g, '/');
-  let formatedBirthday;
+  let formattedDate = '';
   if (birthday) {
-    formatedBirthday = birthday.split('/');
-    formatedBirthday = `
-    ${formatedBirthday[2]}/${formatedBirthday[1]}/${formatedBirthday[0]}
-    `;
+    formattedDate = i18n.language
+      ? format(new Date(birthday), 'dd/MM/yyyy')
+      : format(new Date(birthday), 'MM/dd/yyyy');
   }
 
   return (
@@ -56,9 +55,9 @@ export default function Person() {
       <img src={ imageUrl + profile_path } alt="" />
       <MediaButtons images={ images } />
       <p>{biography}</p>
-      <p>{`${t('person.birthday')}: ${formatedBirthday || 'Unknown'}`}</p>
+      <p>{`${t('person.birthday')}: ${formattedDate || 'Unknown'}`}</p>
       <div>
-        <p>{t('person.knowFor')}</p>
+        <p>{t('person.knownFor')}</p>
         {relevantMovies
           ?.splice(0, 4).map((movie) => (<MovieCard
               movie={ movie }

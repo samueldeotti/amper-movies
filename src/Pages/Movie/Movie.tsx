@@ -52,9 +52,6 @@ export default function Movie() {
       const imagesData = await getCertainData(`movie/${id}/images?
       &include_image_language=en,null`);
       const { backdrops, logos, posters } = imagesData;
-
-      console.log(navigator.languages);
-
       setMovieInfo({
         movie: data,
         providers: savedUser.id
