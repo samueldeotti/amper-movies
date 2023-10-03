@@ -12,6 +12,7 @@ axios.defaults.headers.common.Authorization = TOKEN;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const savedUser = JSON.parse(localStorage.getItem('user') as string) || {};
+const savedLanguage = localStorage.getItem('language') || navigator.languages[0];
 
 const headers = {
   accept: 'application/json',
@@ -24,7 +25,7 @@ const baseUrl = axios.create({
   params: {
     api_key: TOKEN,
     include_adult: savedUser.include_adult,
-    language: navigator.languages.length ? navigator.languages[0] : 'en-US',
+    language: savedLanguage,
   },
   headers,
 });

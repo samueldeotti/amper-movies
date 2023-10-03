@@ -26,8 +26,7 @@ export default function Header() {
 
   const [searchParams] = useSearchParams();
   const authToken = searchParams.get('request_token');
-
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const imageUrl = import.meta.env.VITE_IMG;
 
@@ -37,7 +36,6 @@ export default function Header() {
         const dataLogin = await createSession(authToken as string);
         setUser(dataLogin);
         localStorage.setItem('user', JSON.stringify(dataLogin));
-        // navigate('/');
         window.location.reload();
       };
       getData();
@@ -61,6 +59,12 @@ export default function Header() {
     // savedSearch = JSON.parse(localStorage.getItem('search') as string);
     clearInput();
     setData([]);
+  };
+
+  const handleLanguage = (value: string) => {
+    localStorage.setItem('language', value);
+    i18n.changeLanguage(value);
+    window.location.reload();
   };
 
   const hideSavedSearch = () => {
@@ -149,26 +153,41 @@ export default function Header() {
         <button type="submit">Lupa</button>
       </form>
 
-      {user.id ? (
-        <div onClick={ () => setMenuVisible(!isMenuVisible) }>
-          <p>{user.username}</p>
-          {user.avatar.tmdb.avatar_path ? (
-            <img
-              src={ user.avatar.tmdb.avatar_path + imageUrl }
-              alt="user avatar"
-            />
-          ) : <BsFillPersonFill />}
-          {isMenuVisible && (
-            <ul>
-              <li><Link to="/movies/favorite">{t('header.favorites')}</Link></li>
-              <li><Link to="/movies/watchlist">{t('header.watchlist')}</Link></li>
-              <li><Link to="/movies/rated">{t('header.rated')}</Link></li>
-              <li><a href={ `https://www.themoviedb.org/u/${user.username}` } target="_blanck">{t('header.profile')}</a></li>
-              <li><button onClick={ handleLogOut }>{t('header.logout')}</button></li>
-            </ul>
-          )}
-        </div>
-      ) : (<button onClick={ handleClick }>Login</button>)}
+      <div>
+        <select
+          name=""
+          id=""
+          onChange={ ({ target }) => handleLanguage(target.value) }
+          value={ i18n.language }
+        >
+          <option value="en">
+            en
+          </option>
+          <option value="pt">
+            pt
+          </option>
+        </select>
+        {user.id ? (
+          <div onClick={ () => setMenuVisible(!isMenuVisible) }>
+            <p>{user.username}</p>
+            {user.avatar.tmdb.avatar_path ? (
+              <img
+                src={ user.avatar.tmdb.avatar_path + imageUrl }
+                alt="user avatar"
+              />
+            ) : <BsFillPersonFill />}
+            {isMenuVisible && (
+              <ul>
+                <li><Link to="/movies/favorite">{t('header.favorites')}</Link></li>
+                <li><Link to="/movies/watchlist">{t('header.watchlist')}</Link></li>
+                <li><Link to="/movies/rated">{t('header.rated')}</Link></li>
+                <li><a href={ `https://www.themoviedb.org/u/${user.username}` } target="_blanck">{t('header.profile')}</a></li>
+                <li><button onClick={ handleLogOut }>{t('header.logout')}</button></li>
+              </ul>
+            )}
+          </div>
+        ) : (<button onClick={ handleClick }>Login</button>)}
+      </div>
 
     </header>
   );
