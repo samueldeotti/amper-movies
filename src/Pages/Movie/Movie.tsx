@@ -7,11 +7,12 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useTranslation } from 'react-i18next';
+import { format } from 'date-fns';
 import { CastDetailsProps,
   MovieDetailsProps,
-  ProvidersProps, ImageDetailsProps, UserInfoMovie } from '../../types';
+  ProvidersProps, ImageDetailsProps, UserInfoMovie, VideoProps } from '../../types';
 import { addRating,
-  customStyles, formattedDate, getCertainData, handleLoggedMovies } from '../../utils';
+  customStyles, getCertainData, getVideos, handleLoggedMovies } from '../../utils';
 import ProvidersCard from '../../components/ProvidersCard/ProvidersCard';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
 import MediaButtons from '../../components/MediaButtons/MediaButtons';
@@ -23,11 +24,12 @@ export default function Movie() {
     similars: [] as MovieDetailsProps[],
     cast: [] as CastDetailsProps[],
     images: [] as ImageDetailsProps[],
+    videos: [] as VideoProps[],
   });
   const [userMovieInfo, setUserMovieInfo] = useState({} as UserInfoMovie);
   const [rating, setRating] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const { id } = useParams();
   const imageUrl = import.meta.env.VITE_IMG;
@@ -47,11 +49,16 @@ export default function Movie() {
         setUserMovieInfo(userInfo);
       }
       const providersData = await getCertainData(`movie/${id}/watch/providers`);
-      const similarData = await getCertainData(`movie/${id}/similar`);
+      const videos = await getVideos(id as string);
+
+      const similarData = movie.status === 'Released'
+        ? await getCertainData(`movie/${id}/recommendations`)
+        : await getCertainData(`movie/${id}/similar`);
       const castData = await getCertainData(`movie/${id}/credits`);
       const imagesData = await getCertainData(`movie/${id}/images?
       &include_image_language=en,null`);
-      const { backdrops, logos, posters } = imagesData;
+      const { backdrops, posters } = imagesData;
+
       setMovieInfo({
         movie: data,
         providers: savedUser.id
@@ -59,13 +66,14 @@ export default function Movie() {
           : providersData.results[navigator.languages[0].split('-')[1]],
         similars: similarData,
         cast: castData.cast,
-        images: [backdrops, logos, posters].flat(),
+        images: [backdrops, posters.slice(0, 10)].flat(),
+        videos: [data.videos.results, videos].flat(),
       });
     };
     getData();
   }, [id, userMovieInfo]);
 
-  const { movie, providers, similars, cast, images } = infoMovie;
+  const { movie, providers, similars, cast, images, videos } = infoMovie;
 
   const {
     genres,
@@ -77,7 +85,6 @@ export default function Movie() {
     tagline,
     title,
     vote_average,
-    videos,
   } = infoMovie.movie;
 
   const hoursWatch = Math.floor(+runtime / 60);
@@ -104,6 +111,13 @@ export default function Movie() {
     handleLogged();
     closeModal();
   };
+
+  let formattedDate = '';
+  if (release_date) {
+    formattedDate = i18n.language
+      ? format(new Date(release_date), 'dd/MM/yyyy')
+      : format(new Date(release_date), 'MM/dd/yyyy');
+  }
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -155,7 +169,7 @@ export default function Movie() {
               {/* ESSAS VERIFCAÇÕES PODEM SER FEITAS COM O ITEM, MOVIE.STATUS === RELEASED */}
               {vote_average > +0
                 ? release_date?.split('-')[0]
-                : `${t('movie.releaseDate')} ${formattedDate(release_date)}`}
+                : `${t('movie.releaseDate')} ${formattedDate}`}
             </p>
             <p>
               {minutesWath && hoursWatch

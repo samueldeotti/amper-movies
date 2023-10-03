@@ -39,7 +39,7 @@ export default function Person() {
     .sort((a, b) => +b.release_date.slice(0, 4) - +a.release_date.slice(0, 4));
 
   const relevantMovies = [...filteredMovies]
-    .sort((a, b) => +b.popularity - +a.popularity);
+    .sort((a, b) => +b.vote_count - +a.vote_count);
 
   const { name, profile_path, biography, birthday } = person;
   let formattedDate = '';

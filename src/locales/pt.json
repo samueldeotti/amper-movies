@@ -1,0 +1,72 @@
+{
+  "home": {
+    "popular": "Populares",
+    "trending": "Tendências de hoje",
+    "upcoming": "Estão por vir",
+    "rated": "Melhores avaliados",
+    "viewed": "Vistos recentemente"
+  },
+  "movie": {
+    "tmdb": "Avaliação TMDB",
+    "released": "Ainda não lançado",
+    "rate": {
+      "rateText": "Avaliar",
+      "change": "Mudar avaliação",
+      "add": "Adicionar avaliação"
+    },
+    "watchlist": {
+      "add": "Adicionar à lista de ver mais tarde",
+      "remove": "Remover da lista de ver mais tarde"
+    },
+    "favorite": {
+      "add": "Adicionar aos favoritos",
+      "remove": "Remover dos favoritos"
+    },
+    "releaseDate": "Data de Lançamento",
+    "notInformed": "Não informado",
+    "duration": "Duração",
+    "genres": "Gêneros",
+    "seeFullCast": "Ver elenco completo",
+    "learnMore": "Para saber mais",
+    "cast": "Elenco",
+    "whereWatch": "Onde assistir",
+    "noServicesFound": "Nenhum local encontrado",
+    "similars": "Similares",
+    "moreLikeThis": "Mais como este",
+    "rateThis": "Avalie o filme"
+  },
+  "person": {
+    "birthday": "Data de nascimento",
+    "knownFor": "Conhecido por",
+    "participated": "Participou de"
+  },
+  "search": {
+    "search": "Buscar",
+    "people": "Pessoas",
+    "noResults": "Nenhum resultado encontrado",
+    "resultsFor": "Resultados para"
+  },
+  "header": {
+    "favorites": "Favoritos",
+    "watchlist": "Lista de ver mais tarde",
+    "account": "Conta",
+    "logout": "Sair",
+    "rated": "Filmes Avaliados",
+    "profile": "Ver perfil"
+  },
+  "logged": {
+    "movies": "Filmes",
+    "rated": "Remover Avaliação",
+    "watchlist": "Remover da lista de ver mais tarde",
+    "favorites": "Remover dos Favoritos",
+    "Share": "Compartilhar",
+    "dontHave": "Você não possui nenhum filme",
+    "youNeed": "Você precisa fazer login para acessar esta página"
+  },
+  "photos": "Fotos",
+  "providers": {
+    "buy": "Comprar",
+    "rent": "Alugar",
+    "stream": "Streaming"
+  }
+}

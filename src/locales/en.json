@@ -1,0 +1,72 @@
+{
+  "home": {
+    "popular": "Popular",
+    "trending": "Trending today",
+    "upcoming": "Upcoming",
+    "rated": "Top rated",
+    "viewed": "Recently viewed"
+  },
+  "movie": {
+    "tmdb": "TMDB Rating",
+    "released": "Not released yet",
+    "rate": {
+      "rateText": "Rate",
+      "change": "Change rate",
+      "add": "Add rate"
+    },
+    "watchlist": {
+      "add": "Add to watchlist",
+      "remove": "Remove from watchlist"
+    },
+    "favorite": {
+      "add": "Add to favorites",
+      "remove": "Remove from favorites"
+    },
+    "releaseDate": "Release Date",
+    "notInformed": "Not informed",
+    "duration": "Duration",
+    "genres": "Genres",
+    "seeFullCast": "See the full cast",
+    "learnMore": "To learn more",
+    "cast": "Cast",
+    "whereWatch": "Where to watch",
+    "noServicesFound": "No services found",
+    "similars": "Similars",
+    "moreLikeThis": "More like this",
+    "rateThis": "Rate this"
+  },
+  "person": {
+    "birthday": "Birthday",
+    "knownFor": "Known for",
+    "participated": "Participated in"
+  },
+  "search": {
+    "search": "Search",
+    "people": "People",
+    "noResults": "No results found",
+    "resultsFor": "Results for"
+  },
+  "header": {
+    "favorites": "Favorites",
+    "watchlist": "Watchlist",
+    "account": "Account",
+    "logout": "Logout",
+    "rated": "Rated Movies",
+    "profile": "See profile"
+  },
+  "logged": {
+    "movies": "Movies",
+    "rated": "Remove Rate",
+    "watchlist": "Remove from Watchlist",
+    "favorites": "Remove from Favorites",
+    "Share": "Share",
+    "dontHave": "You don't have any movies",
+    "youNeed": "You need to Login to acess this page"
+  },
+  "photos": "Photos",
+  "providers": {
+    "buy": "Buy",
+    "rent": "Rent",
+    "stream": "Stream"
+  }
+}

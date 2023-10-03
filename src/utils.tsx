@@ -15,7 +15,7 @@ const savedUser = JSON.parse(localStorage.getItem('user') as string) || {};
 
 const headers = {
   accept: 'application/json',
-  'content-type': 'application/json',
+  'content-type': 'application/json;charset=utf-8',
   Authorization: AUTHORIZATION,
 };
 
@@ -24,7 +24,7 @@ const baseUrl = axios.create({
   params: {
     api_key: TOKEN,
     include_adult: savedUser.include_adult,
-    language: navigator.languages[0], // fazer com que essa lingua seja responsiva com o q tem salvo no localstorage, fazer com que a pagina também seja responsiva com o q tem salvo no localstorage
+    language: navigator.languages.length ? navigator.languages[0] : 'en-US',
   },
   headers,
 });
@@ -79,14 +79,20 @@ const addRating = async (movieId: string, rating: number) => {
   return data;
 };
 
-const deleteRating = async (movieId: number, sessionId: number) => {
-  const { data } = await axios.delete(`${BASE_URL}movie/${movieId}/rating?session_id=${sessionId}`, { headers });
+const deleteRating = async (movieId: number) => {
+  const { data } = await axios.delete(`${BASE_URL}movie/${movieId}/rating`, { headers });
   return data;
 };
 
 const handleLoggedMovies = async (movieId: string | number, accountId: number, value: boolean, type: string) => {
   const { data } = await axios.post(`${BASE_URL}account/${accountId}/${type}?`, { media_type: 'movie', media_id: movieId, [type]: value }, { headers });
   return data;
+};
+
+const getVideos = async (movieId: string) => {
+  const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${TOKEN}&language=en-US`);
+  const { results } = await response.json();
+  return results.filter((video: any) => video.type !== 'Trailer' && video.site === 'YouTube');
 };
 
 const customStyles = {
@@ -100,10 +106,5 @@ const customStyles = {
   },
 };
 
-const formattedDate = (date: string) => {
-  const [year, month, day] = date.split('-');
-  return `${month}/${day}/${year}`;
-};
-
 export { getHomeMovies,
-  getSearched, createSession, getUserData, getCertainData, addRating, handleLoggedMovies, customStyles, deleteRating, formattedDate };
+  getSearched, createSession, getUserData, getCertainData, addRating, handleLoggedMovies, customStyles, deleteRating, getVideos };

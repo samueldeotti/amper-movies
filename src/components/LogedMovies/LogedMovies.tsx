@@ -38,7 +38,7 @@ export default function LogedMovie() {
 
   const handleClick = async (movieId: number) => {
     const response = (type.includes('rated')
-      ? await deleteRating(movieId, savedUser.id)
+      ? await deleteRating(movieId)
       : await handleLoggedMovies(movieId, savedUser.id, false, type));
 
     alert(response.success
