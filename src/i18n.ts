@@ -5,7 +5,6 @@ import translationEN from './locales/en.json';
 import translationPT from './locales/pt.json';
 
 const savedLanguage = localStorage.getItem('language') || navigator.languages[0];
-console.log(savedLanguage);
 
 i18n
   .use(initReactI18next)

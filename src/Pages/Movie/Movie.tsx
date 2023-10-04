@@ -56,14 +56,15 @@ export default function Movie() {
         : await getCertainData(`movie/${id}/similar`);
       const castData = await getCertainData(`movie/${id}/credits`);
       const imagesData = await getCertainData(`movie/${id}/images?
-      &include_image_language=en,null`);
+      &include_image_language=${i18n.language},null`);
+
       const { backdrops, posters } = imagesData;
 
       setMovieInfo({
         movie: data,
         providers: savedUser.id
           ? providersData.results[savedUser.iso_3166_1]
-          : providersData.results[navigator.languages[0].split('-')[1]],
+          : providersData.results[i18n.language === 'en' ? 'US' : 'BR'],
         similars: similarData,
         cast: castData.cast,
         images: [backdrops, posters.slice(0, 10)].flat(),
@@ -125,6 +126,14 @@ export default function Movie() {
       {!movie.id ? <p>Loading...</p>
         : (
           <div>
+            {/* {images.map(({ file_path }) => (
+              <img
+                key={ file_path }
+                src={ imageUrl + file_path }
+                alt={ title }
+                style={ { width: 200 } }
+              />
+            ))} */}
             <h2>{title}</h2>
             <p>{tagline}</p>
             <div style={ { display: 'flex', justifyContent: 'center' } }>

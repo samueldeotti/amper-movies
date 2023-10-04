@@ -12,10 +12,7 @@ export default function MovieCarousel({ movies, text, type = '' }: MovieCardProp
     <div
       style={ {
         display: 'flex',
-        maxWidth: 1000,
-        overflowX: 'auto',
-        maxHeight: 550,
-        overflowY: 'hidden' } }
+      } }
     >
       <p>{text}</p>
       {movies.map((movie: any) => (movie?.title

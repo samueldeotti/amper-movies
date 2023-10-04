@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Header from '../../components/Header.tsx/Header';
+import Header from '../../components/Header/Header';
 import NavMenu from '../../components/NavMenu/NavMenu';
 
 export default function Layout() {

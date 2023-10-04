@@ -26,6 +26,8 @@ const baseUrl = axios.create({
     api_key: TOKEN,
     include_adult: savedUser.include_adult,
     language: savedLanguage,
+    // append_to_response: 'images',
+    // include_image_language: `${savedLanguage.split('-')[0]},null`,
   },
   headers,
 });
@@ -33,7 +35,7 @@ const baseUrl = axios.create({
 const getCertainData = async (url: string) => {
   const { data } = await baseUrl.get(url);
   if (data.results && !url.includes('watch/providers') && !url.includes('upcoming')) {
-    return data.results.filter((movie: MovieProps) => movie.backdrop_path && movie.poster_path && movie.overview && movie.title && movie.vote_average > 0);
+    return data.results.filter((movie: MovieProps) => movie.backdrop_path && movie.poster_path && movie.overview && movie.title);
   }
   return data;
 };
