@@ -12,6 +12,7 @@ export default function MovieCarousel({ movies, text, type = '' }: MovieCardProp
     <div
       style={ {
         display: 'flex',
+        overflow: 'auto',
       } }
     >
       <p>{text}</p>

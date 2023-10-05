@@ -42,25 +42,31 @@ export default function MovieCard({ movie, character = '', type = '' }: MovieCar
   const director = details?.cast?.crew
     ?.find((person) => person.job === 'Director')?.name;
   const poster = details?.images?.posters[0]?.file_path;
-  const logo = details?.images?.logos[0]?.file_path;
+  // const logo = details?.images?.logos[0]?.file_path;
 
   const imageUrl = import.meta.env.VITE_IMG;
 
   return (
-    <div className="card">
-      <Link to={ `/movie/${movie.id}` } className="poster">
+    <Link to={ `/movie/${movie.id}` } className="card">
+      <div className="poster">
         <img src={ poster ? imageUrl + poster : imageUrl + movie.poster_path } alt="" />
-      </Link>
+      </div>
       <div className="details">
-        {!logo ? <img src={ imageUrl + logo } alt="" className="logo" />
-          : <h2 className="title">{movie.title}</h2>}
+        <h2 className="title">{movie.title}</h2>
         {director && <h3>{`Directed by: ${director}`}</h3>}
         <div className="rating">
-          <span className="stars">Star Icons</span>
-          <span className="rate">
-            {type === 'Upcoming'
-              ? formatDate(movie.release_date) : movie.vote_average.toFixed(1)}
-          </span>
+          {type === 'Upcoming' ? (
+            <>
+              <span className="stars">Release Date:</span>
+              <span className="rate">{formatDate(movie.release_date)}</span>
+            </>
+          ) : (
+            <>
+              <span className="stars">Star Icons</span>
+              <span className="rate">{movie.vote_average.toFixed(1)}</span>
+            </>
+
+          )}
         </div>
         <div className="tags">
           {/* AQUI SO RETORNA O ID DOS GENRES */}
@@ -69,7 +75,7 @@ export default function MovieCard({ movie, character = '', type = '' }: MovieCar
         </div>
         <div className="info">
           <p>
-            {movie.overview.split(' ').slice(0, 10).join(' ').replace(/,\s*$/, '')}
+            {movie.overview.split(' ').slice(0, 9).join(' ').replace(/,\s*$/, '')}
             ...
           </p>
         </div>
@@ -78,7 +84,11 @@ export default function MovieCard({ movie, character = '', type = '' }: MovieCar
           <ul>
             {details.cast?.cast?.slice(0, 5).map((person) => (
               <li key={ person.id } title={ person.name }>
-                <img src={ imageUrl + person.profile_path } alt="actor" />
+                <img
+                  src={ person.profile_path
+                    ? imageUrl + person.profile_path : '/anonym.png' }
+                  alt="actor"
+                />
               </li>
             ))}
           </ul>
@@ -86,6 +96,6 @@ export default function MovieCard({ movie, character = '', type = '' }: MovieCar
         </div>
       </div>
       {character && <p>{character}</p>}
-    </div>
+    </Link>
   );
 }

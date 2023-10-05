@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
 import { ActorMoviesProps } from '../../types';
 
 type PersonCardProps = {

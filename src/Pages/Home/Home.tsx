@@ -40,7 +40,7 @@ export default function Home() {
               type="Upcoming"
             />
             <MovieCarousel movies={ topRated } text={ t('home.rated') } />
-            {recentlyMovies.length
+            {!!recentlyMovies.length
             && <MovieCarousel movies={ recentlyMovies } text={ t('home.viewed') } />}
           </>
         )}
