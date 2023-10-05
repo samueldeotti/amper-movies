@@ -58,7 +58,8 @@ const getHomeMovies = async () => {
 
 const getSearched = async (searchParam:string) => {
   const moviesData = await baseUrl.get(`search/movie?query=${searchParam}`);
-  const peopleData = await baseUrl.get(`search/person?query=${searchParam}`);
+  const peopleData = await baseUrl.get(`search/person?query=${searchParam}&append_to_response=credits`);
+
   return {
     movie: moviesData.data.results.filter((movie: MovieProps) => movie.backdrop_path && movie.poster_path && movie.overview && movie.title && movie.vote_average > 0),
     people: peopleData.data.results.filter((person: ActorMoviesProps) => person.known_for.length && person.profile_path),

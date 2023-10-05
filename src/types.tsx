@@ -208,3 +208,8 @@ export type UserInfoMovie = {
   rated: boolean;
   watchlist: boolean;
 };
+
+export type DetailsProps = {
+  images: ImagesProps;
+  cast: CastProps;
+};

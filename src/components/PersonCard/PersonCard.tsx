@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { ActorMoviesProps } from '../../types';
 
 type PersonCardProps = {
@@ -10,6 +11,7 @@ const imageUrl = import.meta.env.VITE_IMG;
 
 export default function PersonCard({ personInfo }: PersonCardProps) {
   const { id, name, known_for_department, profile_path, known_for } = personInfo;
+
   return (
     <div>
       <Link to={ `/person/${name.replace(' ', '')}/${id}` }>
