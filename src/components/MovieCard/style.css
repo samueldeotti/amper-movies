@@ -79,9 +79,19 @@
   padding: 5px 0;
 }
 
+.card .details .starRating {
+  position: relative;
+  display: inline-block;
+  font-size: 1em;
+  background-image: linear-gradient(90deg, #f7f406 50%, transparent 50% );
+  
+}
+
+
 /* aqui colocar para ficar so as estrelas dessa cor */
 .card .details .rating .stars {
   color: #f7f406;
+  background-color: transparent;
   font-size: 1em;
 }
 
@@ -97,19 +107,18 @@
 
 .card .details .tags span {
   margin-right: 5px;
-  padding: 2px 5px;
+  padding: 4px 6px;
   color: #fff;
   border-radius: 4px;
-  background-color: #03a8f5;
+  background-color: rgb(133, 6, 6);
+  /* background-color: rgba(255, 255, 255, 0.1); */
+  /* background-color: #03a8f5; */
 }
 
 .card .details .tags span:nth-child(2) {
-  background-color: #ff5722; /* talvez um #000 fique melhor */
+  background-color: #0b3770;
+  /* background-color: #ff5722; */
 }
-
-/* .card .details .tags span:nth-child(3) {
-  background-color: #89ff3a;
-} */
 
 .card .details .info {
   color: #fff;
@@ -143,3 +152,23 @@
 .card .details .cast ul li img {
   max-width: 100%;
 }
+
+/* .card .details .rating meter {
+  position: absolute;
+  left: 0;
+  width: 28%;
+  z-index: -1;
+  outline: 0 none;
+  border: 0 none;
+  top: 8px;
+  height: 20px;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  
+  border: 1px solid #fff;
+  background-color: #f7f406;
+  border-radius: 3px;
+  backdrop-filter: blur(5px);
+} */
+

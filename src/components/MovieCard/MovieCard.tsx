@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
+import { FiStar } from 'react-icons/fi';
 import { ActorMoviesProps, DetailsProps,
   MovieDetailsProps, MovieProps } from '../../types';
 import './style.css';
@@ -42,7 +43,6 @@ export default function MovieCard({ movie, character = '', type = '' }: MovieCar
   const director = details?.cast?.crew
     ?.find((person) => person.job === 'Director')?.name;
   const poster = details?.images?.posters[0]?.file_path;
-  // const logo = details?.images?.logos[0]?.file_path;
 
   const imageUrl = import.meta.env.VITE_IMG;
 
@@ -62,7 +62,14 @@ export default function MovieCard({ movie, character = '', type = '' }: MovieCar
             </>
           ) : (
             <>
-              <span className="stars">Star Icons</span>
+              <div className="starRating">
+                <span className="stars"><FiStar className="teste" /></span>
+                <span className="stars"><FiStar className="teste" /></span>
+                <span className="stars"><FiStar className="teste" /></span>
+                <span className="stars"><FiStar className="teste" /></span>
+                <span className="stars"><FiStar className="teste" /></span>
+              </div>
+              {/* <meter min="1" max="10" value={ movie.vote_average.toFixed(1) } /> */}
               <span className="rate">{movie.vote_average.toFixed(1)}</span>
             </>
 

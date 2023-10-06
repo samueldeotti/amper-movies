@@ -61,7 +61,8 @@
     "favorites": "Remove from Favorites",
     "Share": "Share",
     "dontHave": "You don't have any movies",
-    "youNeed": "You need to Login to acess this page"
+    "youNeed": "You need to Login to acess this page",
+    "genres": "Genres"
   },
   "photos": "Photos",
   "providers": {

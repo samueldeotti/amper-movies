@@ -12,13 +12,16 @@ export default function MovieCarousel({ movies, text, type = '' }: MovieCardProp
     <div
       style={ {
         display: 'flex',
-        overflow: 'auto',
+        flexDirection: 'column',
+
       } }
     >
       <p>{text}</p>
-      {movies.map((movie: any) => (movie?.title
-        ? <MovieCard key={ movie.id } movie={ movie } type={ type } />
-        : <CastCard key={ movie.id } cast={ movie } />))}
+      <div style={ { display: 'flex' } }>
+        {movies.map((movie: any) => (movie?.title
+          ? <MovieCard key={ movie.id } movie={ movie } type={ type } />
+          : <CastCard key={ movie.id } cast={ movie } />))}
+      </div>
     </div>
   );
 }

@@ -48,10 +48,10 @@
   },
   "header": {
     "favorites": "Favoritos",
-    "watchlist": "Lista de ver mais tarde",
+    "watchlist": "Watchlist",
     "account": "Conta",
     "logout": "Sair",
-    "rated": "Filmes Avaliados",
+    "rated": "Avaliados",
     "profile": "Ver perfil"
   },
   "logged": {
@@ -61,7 +61,8 @@
     "favorites": "Remover dos Favoritos",
     "Share": "Compartilhar",
     "dontHave": "Você não possui nenhum filme",
-    "youNeed": "Você precisa fazer login para acessar esta página"
+    "youNeed": "Você precisa fazer login para acessar esta página",
+    "genres" : "Gêneros"
   },
   "photos": "Fotos",
   "providers": {

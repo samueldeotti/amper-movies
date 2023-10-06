@@ -15,16 +15,20 @@ export default function NavMenu() {
   }, []);
 
   return (
-    <aside style={ { display: 'flex', flexDirection: 'column' } }>
-      {genres.length === 0 ? <p>loading</p>
-        : genres.map((genre) => (
-          <NavLink
-            key={ genre.id }
-            to={ `/genre/${genre.id}/${genre.name}` }
-          >
-            {genre.name}
-          </NavLink>
-        ))}
-    </aside>
+    <ul>
+      <li>Login</li>
+      <li>Languages</li>
+      <li>en-US</li>
+      <li>pt-BR</li>
+
+      {/* {genres.length === 0 ? <p>loading...</p>
+        : genres.map((genre, index) => (
+          <li key={ genre.id } style={ { '--i': index } as React.CSSProperties }>
+            <NavLink to={ `/genre/${genre.id}/${genre.name}` }>
+              {genre.name}
+            </NavLink>
+          </li>
+        ))} */}
+    </ul>
   );
 }

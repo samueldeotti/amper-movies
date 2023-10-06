@@ -7,7 +7,7 @@ export default function Layout() {
     <>
       <Header />
       <main style={ { display: 'flex' } }>
-        <NavMenu />
+        {/* <NavMenu /> */}
         <Outlet />
       </main>
     </>
