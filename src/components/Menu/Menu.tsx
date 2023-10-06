@@ -111,8 +111,8 @@ export default function Menu() {
             </label>
           </LoginButton>
         </Li>
-        <Li style={ { '--i': 3 } as React.CSSProperties } show={ showMenu }>
-          <LoggedButton to="/">
+        <Li style={ { '--i': 4 } as React.CSSProperties } show={ showMenu }>
+          <LoggedButton to="/genres">
             {t('logged.genres')}
           </LoggedButton>
         </Li>
@@ -120,13 +120,13 @@ export default function Menu() {
         && (
           <>
             <Li
-              style={ { '--i': 4 } as React.CSSProperties }
+              style={ { '--i': 5 } as React.CSSProperties }
               show={ showMenu }
             >
               <NavigationText>Account</NavigationText>
             </Li>
             <Li
-              style={ { '--i': 5 } as React.CSSProperties }
+              style={ { '--i': 6 } as React.CSSProperties }
               show={ showMenu }
             >
               <LoginButton href={ `https://www.themoviedb.org/u/${user.username}` } target="_blanck">
@@ -144,7 +144,7 @@ export default function Menu() {
               </LoginButton>
             </Li>
             <Li
-              style={ { '--i': 6 } as React.CSSProperties }
+              style={ { '--i': 7 } as React.CSSProperties }
               show={ showMenu }
             >
               <LoggedButton to="/movies/favorite">
@@ -152,7 +152,7 @@ export default function Menu() {
               </LoggedButton>
             </Li>
             <Li
-              style={ { '--i': 7 } as React.CSSProperties }
+              style={ { '--i': 8 } as React.CSSProperties }
               show={ showMenu }
             >
               <LoggedButton to="/movies/watchlist">
@@ -160,7 +160,7 @@ export default function Menu() {
               </LoggedButton>
             </Li>
             <Li
-              style={ { '--i': 8 } as React.CSSProperties }
+              style={ { '--i': 9 } as React.CSSProperties }
               show={ showMenu }
             >
               <LoggedButton to="/movies/rated">
@@ -168,7 +168,7 @@ export default function Menu() {
               </LoggedButton>
             </Li>
             <Li
-              style={ { '--i': 9 } as React.CSSProperties }
+              style={ { '--i': 10 } as React.CSSProperties }
               show={ showMenu }
             >
               <LoginButton onClick={ handleLogOut }>

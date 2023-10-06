@@ -10,8 +10,8 @@ export const NavigationDiv = styled.div<{ show: boolean }>`
   color: ${({ show }) => (show ? '#333;' : '#fff;')};
   ${({ show }) => (show
     ? 'transition: 1s; background-color: #fff;' : 'background-color: transparent;')}
-  backdrop-filter: 
-  ${window.screenTop > 500 ? '' : 'blur(20px); border-radius: 0 0 0 0;'};
+  backdrop-filter: blur(40px);
+  border-radius: ${({ show }) => (show ? '0' : '8px')};
 `;
 
 export const MenuIcon = styled.button<{ show: boolean }>`
@@ -67,10 +67,11 @@ export const Span = styled.span<{ show: boolean }>`
 
 export const NavigationUl = styled.ul`
   position: absolute;
-  width: 149.5px;
+  width: 150px;
   display: flex;
   list-style: none;
   flex-direction: column;
+  
 `;
 
 export const Li = styled.li<{ show: boolean }>`
@@ -84,6 +85,7 @@ export const Li = styled.li<{ show: boolean }>`
   opacity: ${({ show }) => (show ? '1' : '0')};
   transform: ${({ show }) => (show ? 'translateX(0px);' : 'translateX(250px);')};
   transition-delay: calc(0.1s * var(--i));
+  
   
 `;
 

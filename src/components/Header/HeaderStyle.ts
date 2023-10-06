@@ -1,8 +1,7 @@
-import { AiOutlineMenu } from 'react-icons/ai';
 import styled from 'styled-components';
 
-export const HeaderStyled = styled.header<{ show: boolean }>`
-  position: fixed;
+export const HeaderStyled = styled.header<{ show: boolean, path: string }>`
+  position: ${({ path }) => (path === '/' ? 'fixed' : 'relative')};
   top: 0;
   left: 0;
   display: flex;
@@ -21,28 +20,22 @@ export const Logo = styled.h1<{ show: boolean }>`
   color: ${({ show }) => (show ? '#333' : '#fff')};
 `;
 
-export const Background = styled.section`
-  height: 80vh;
-  background-image: url('/anonym.png');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-`;
-
 export const HeaderForm = styled.form<{ show: boolean, search: string }>`
   position: relative;
   display: flex;
   align-items: center;
-  ${({ show }) => (show ? 'background-color: #f6f6f6' : 'backdrop-filter: blur(20px)')};
+  ${({ show }) => (show ? 'background-color: #f6f6f6' : 'backdrop-filter: blur(40px)')};
   justify-content: center;
   width: 400px;
   border-radius: 8px;
   padding-left: 4px;
-  outline: 1px solid black;
+  /* outline: 1px solid #fff; */
+  transition: 0.5s;
 
   &:focus-within {
     border-radius: ${({ search }) => (search ? '8px 8px 0 0' : '8px')} ;
     outline: none;
+    transition: .3s;
   }
   &:not(:focus-within) {
     transition: 0.3s;
@@ -57,6 +50,7 @@ export const HeaderInput = styled.input`
   padding: 8px;
   margin-right: 10px;
   background-color: transparent;
+
 
   &:focus {
     outline: none;
@@ -84,45 +78,6 @@ export const HeaderButton = styled.button`
   }
 `;
 
-export const LoginDiv = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  gap: 28px;
-`;
-
-export const Select = styled.select`
-  background: transparent;
-  padding: 8px;
-  font-size: 16px;
-  line-height: 1;
-  border: none;
-  outline: 1px solid #333;
-  border-radius: 8px;
-  height: 34px;
-  /* -webkit-appearance: none; */
-  cursor: pointer;
-
-  & option {
-    background-color: #333;
-    color: white;
-  }
-`;
-
-export const LoginButton = styled.button`
-  font-size: 16px;
-  border-radius: 8px;
-  color: white;
-  background-color: transparent;
-  padding: 8px;
-  margin: 0 auto;
-  width: 100%;
-  border: none;
-  outline: 1px solid #333;
-  cursor: pointer;
-`;
-
 export const SearchUl = styled.ul<{ show: string }>`
   position: absolute;
   top: 100%;
@@ -134,7 +89,9 @@ export const SearchUl = styled.ul<{ show: string }>`
   padding: 8px;
   z-index: 3;
   list-style: none;
-  display: ${({ show }) => show};
+  transition: .5s;
+  visibility: ${({ show }) => show};
+  opacity: ${({ show }) => (show === 'visible' ? '1' : '0')};
 `;
 
 export const SearchLi = styled.li`
@@ -150,9 +107,4 @@ justify-content: center;
   &:hover {
     background-color: rgba(255, 255, 255, 0.5);
   }
-`;
-
-export const MenuIcon = styled(AiOutlineMenu)`
-  font-size: 26px;
-  cursor: pointer;
 `;
