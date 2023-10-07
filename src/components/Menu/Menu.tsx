@@ -10,6 +10,7 @@ import { createSession, getCertainData } from '../../utils';
 
 export default function Menu() {
   const [showMenu, setShowMenu] = useState(false);
+  const [heigth, setHeigth] = useState(false);
   const { t, i18n } = useTranslation();
 
   const savedUser = localStorage.getItem('user');
@@ -18,11 +19,11 @@ export default function Menu() {
   const authToken = searchParams.get('request_token');
   const imageUrl = import.meta.env.VITE_IMG;
 
-  // const handleScroll = () => {
-  //   const { scrollY } = window;
-  //   if (scrollY > 500) setshowMenu(true);
-  //   else setshowMenu(false);
-  // };
+  const handleScroll = () => {
+    const { scrollY } = window;
+    if (scrollY > 500) setHeigth(true);
+    else setHeigth(false);
+  };
 
   const handleLogin = async () => {
     if (!user.id) {
@@ -47,11 +48,11 @@ export default function Menu() {
       };
       getData();
     }
-    // window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll);
 
-    // return () => {
-    //   window.removeEventListener('scroll', handleScroll);
-    // };
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [user.id, authToken]);
 
   const handleClick = (value: string) => {
@@ -65,9 +66,10 @@ export default function Menu() {
     <NavigationDiv show={ showMenu }>
       <MenuIcon
         show={ showMenu }
+        height={ heigth }
         onClick={ () => setShowMenu(!showMenu) }
       >
-        <Span show={ showMenu } />
+        <Span show={ showMenu } height={ heigth } />
       </MenuIcon>
       <NavigationUl>
         {!user.id && (

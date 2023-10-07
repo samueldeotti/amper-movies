@@ -24,7 +24,7 @@ export const HeaderForm = styled.form<{ show: boolean, search: string }>`
   position: relative;
   display: flex;
   align-items: center;
-  ${({ show }) => (show ? 'background-color: #f6f6f6' : 'backdrop-filter: blur(40px)')};
+  ${({ show }) => (show ? 'background-color: #f6f6f6' : 'backdrop-filter: blur(20px)')};
   justify-content: center;
   width: 400px;
   border-radius: 8px;

@@ -14,18 +14,18 @@ export const NavigationDiv = styled.div<{ show: boolean }>`
   border-radius: ${({ show }) => (show ? '0' : '8px')};
 `;
 
-export const MenuIcon = styled.button<{ show: boolean }>`
+export const MenuIcon = styled.button<{ show: boolean, height: boolean }>`
   position: relative;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 50px;
+  width: 85%;
+  height: 32px;
   background-color: transparent;
   cursor: pointer;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  color: ${window.screenTop > 500 ? '#000' : '#000'};
+  color: ${({ height, show }) => (height || show ? '#000' : '#fff')};
   padding: 5px 20px;
   border: 0 none;
 
@@ -35,7 +35,7 @@ export const MenuIcon = styled.button<{ show: boolean }>`
   }
 `;
 
-export const Span = styled.span<{ show: boolean }>`
+export const Span = styled.span<{ show: boolean, height: boolean }>`
   position: relative;
   width: 20px;
   height: 50px;
@@ -47,9 +47,10 @@ export const Span = styled.span<{ show: boolean }>`
     left: 0;
     width: 100%;
     height: 2px;
-    background-color: ${window.screenTop > 500 ? '#000' : '#000'};
+    background-color: ${({ height, show }) => (height || show ? '#000' : '#fff')};
     transform: 0.5s;
     ${({ show }) => (show ? 'transform: rotate(225deg); top: 24px;' : '')};
+    transition: transform 0.3s, background-color 0.5s;
   }
 
   &::after {
@@ -59,7 +60,7 @@ export const Span = styled.span<{ show: boolean }>`
     left: 0;
     width: 100%;
     height: 2px;
-    background-color: ${window.screenTop > 500 ? '#000' : '#000'};
+    background-color: ${({ height, show }) => (height || show ? '#000' : '#fff')};
     transition: 0.5s;
     ${({ show }) => (show ? 'transform: rotate(135deg); bottom: 24px;' : '')};
   }
@@ -85,8 +86,6 @@ export const Li = styled.li<{ show: boolean }>`
   opacity: ${({ show }) => (show ? '1' : '0')};
   transform: ${({ show }) => (show ? 'translateX(0px);' : 'translateX(250px);')};
   transition-delay: calc(0.1s * var(--i));
-  
-  
 `;
 
 export const LoginButton = styled.a`

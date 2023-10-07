@@ -16,6 +16,7 @@
 .card .poster {
   position: relative;
   overflow: hidden;
+  user-select: none;
 }
 
 .card .poster::before {

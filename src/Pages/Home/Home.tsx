@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { getHomeMovies } from '../../utils';
 import { HomeMoviesProps } from '../../types';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
-import { Background } from './HomeStyle';
+import { HomeContainer, PopularContent } from './HomeStyle';
+import PopularCard from '../../components/PopularCard/PopularCard';
 
 export default function Home() {
   const [homeMovies, setHomeMovies] = useState({} as HomeMoviesProps);
@@ -31,26 +32,26 @@ export default function Home() {
   const { popular, trending, upcoming, topRated, recentlyMovies } = homeMovies;
 
   return (
-    <div>
+    <HomeContainer>
       {Object.keys(homeMovies).length === 0 ? <p>Loading...</p>
         : (
           <>
-            <Background
-              image={ imageUrl.replace('w500', 'original')
-            + popular[16].backdrop_path }
-            />
-            <MovieCarousel movies={ popular } text={ t('home.popular') } />
-            <MovieCarousel movies={ trending } text={ t('home.trending') } />
-            <MovieCarousel
-              movies={ upcoming }
-              text={ t('home.upcoming') }
-              type="Upcoming"
-            />
-            <MovieCarousel movies={ topRated } text={ t('home.rated') } />
-            {!!recentlyMovies.length
+            <PopularContent>
+              <PopularCard movies={ popular } />
+            </PopularContent>
+            <div style={ { marginTop: '40vh' } }>
+              <MovieCarousel movies={ trending } text={ t('home.trending') } />
+              <MovieCarousel
+                movies={ upcoming }
+                text={ t('home.upcoming') }
+                type="Upcoming"
+              />
+              <MovieCarousel movies={ topRated } text={ t('home.rated') } />
+              {!!recentlyMovies.length
             && <MovieCarousel movies={ recentlyMovies } text={ t('home.viewed') } />}
+            </div>
           </>
         )}
-    </div>
+    </HomeContainer>
   );
 }

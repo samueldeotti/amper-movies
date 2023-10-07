@@ -23,13 +23,13 @@ export default function MovieCard({ movie, character = '', type = '' }: MovieCar
   useEffect(() => {
     const getDetails = async () => {
       // eslint-disable-next-line max-len
-      const images = await getCertainData(`movie/${movie.id}/images?include_image_language=${i18n.language},null`);
-      const cast = await getCertainData(`movie/${movie.id}/credits`);
-
-      setDetails({ images, cast });
+      const { images, credits, genres } = await getCertainData(`movie/${movie.id}?append_to_response=credits,images&include_image_language=${i18n.language},null`);
+      setDetails({ images, credits, genres });
     };
     getDetails();
   }, [movie.id]);
+
+  console.log(details);
 
   const formatDate = (date: string) => {
     if (date) {
@@ -40,14 +40,14 @@ export default function MovieCard({ movie, character = '', type = '' }: MovieCar
     return '';
   };
 
-  const director = details?.cast?.crew
+  const director = details?.credits?.crew
     ?.find((person) => person.job === 'Director')?.name;
   const poster = details?.images?.posters[0]?.file_path;
 
   const imageUrl = import.meta.env.VITE_IMG;
 
   return (
-    <Link to={ `/movie/${movie.id}` } className="card">
+    <Link to={ `/movie/${movie.id}` } className="card" style={ { userSelect: 'none' } }>
       <div className="poster">
         <img src={ poster ? imageUrl + poster : imageUrl + movie.poster_path } alt="" />
       </div>
@@ -75,11 +75,12 @@ export default function MovieCard({ movie, character = '', type = '' }: MovieCar
 
           )}
         </div>
-        <div className="tags">
-          {/* AQUI SO RETORNA O ID DOS GENRES */}
-          <span>Sci-fi</span>
-          <span>Action</span>
-        </div>
+        {details.genres
+        && (
+          <div className="tags">
+            <span>{details?.genres[0]?.name}</span>
+            {details?.genres[1]?.name && <span>{details?.genres[1]?.name}</span>}
+          </div>)}
         <div className="info">
           <p>
             {movie.overview.split(' ').slice(0, 9).join(' ').replace(/,\s*$/, '')}
@@ -89,7 +90,7 @@ export default function MovieCard({ movie, character = '', type = '' }: MovieCar
         <div className="cast">
           <h4>Cast</h4>
           <ul>
-            {details.cast?.cast?.slice(0, 5).map((person) => (
+            {details.credits?.cast?.slice(0, 5).map((person) => (
               <li key={ person.id } title={ person.name }>
                 <img
                   src={ person.profile_path
@@ -106,3 +107,10 @@ export default function MovieCard({ movie, character = '', type = '' }: MovieCar
     </Link>
   );
 }
+
+// const logo = details?.images?.logos[0]?.file_path;
+/* {logo ? <img
+  className="logo"
+          src={ imageUrl.replace('w500', 'w185') + logo }
+          alt=""
+        /> : <h2 className="title">{movie.title}</h2>} */

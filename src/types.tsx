@@ -54,6 +54,7 @@ export type MovieDetailsProps = {
   genres: GenreProps[];
   homepage: string;
   id: number;
+  genre_ids: number[];
   imdb_id: string;
   original_language: string;
   original_title: string;
@@ -162,6 +163,7 @@ export type PersonProps = {
 
 export type ActorMoviesProps = {
   adult: boolean;
+
   backdrop_path: string | null;
   character: string;
   credit_id: string;
@@ -211,5 +213,6 @@ export type UserInfoMovie = {
 
 export type DetailsProps = {
   images: ImagesProps;
-  cast: CastProps;
+  credits: CastProps;
+  genres: GenreProps[];
 };
