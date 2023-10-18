@@ -74,7 +74,12 @@ export type MovieDetailsProps = {
   vote_average: number;
   vote_count: number;
   media_type?: string;
-  videos: { results: VideoProps[] };
+  videos: any;
+  credits: CastProps;
+  similar: { results: MovieProps[] } ;
+  recommendations: any;
+  images: any;
+  ['watch/providers']: any;
 };
 
 export type ProvidersProps = {
@@ -163,7 +168,6 @@ export type PersonProps = {
 
 export type ActorMoviesProps = {
   adult: boolean;
-
   backdrop_path: string | null;
   character: string;
   credit_id: string;

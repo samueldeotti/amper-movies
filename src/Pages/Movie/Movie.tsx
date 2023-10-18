@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable complexity */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -5,25 +7,16 @@ import Modal from 'react-modal';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 
-import { CastDetailsProps,
-  MovieDetailsProps,
-  ProvidersProps, ImageDetailsProps, UserInfoMovie, VideoProps } from '../../types';
+import { MovieDetailsProps, MovieProps, UserInfoMovie, VideoProps } from '../../types';
 import { addRating,
-  customStyles, getCertainData, getVideos, handleLoggedMovies } from '../../utils';
+  customStyles, getCertainData, handleLoggedMovies } from '../../utils';
 import ProvidersCard from '../../components/ProvidersCard/ProvidersCard';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
 import MediaButtons from '../../components/MediaButtons/MediaButtons';
 import FavButtons from '../../components/FavButtons/FavButtons';
 
 export default function Movie() {
-  const [infoMovie, setMovieInfo] = useState({
-    movie: {} as MovieDetailsProps,
-    providers: {} as ProvidersProps,
-    similars: [] as MovieDetailsProps[],
-    cast: [] as CastDetailsProps[],
-    images: [] as ImageDetailsProps[],
-    videos: [] as VideoProps[],
-  });
+  const [movie, setMovie] = useState<MovieDetailsProps>({} as MovieDetailsProps);
   const [userMovieInfo, setUserMovieInfo] = useState({} as UserInfoMovie);
   const [rating, setRating] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
@@ -31,47 +24,22 @@ export default function Movie() {
 
   const { id } = useParams();
   const imageUrl = import.meta.env.VITE_IMG;
+  let savedUser = JSON.parse(localStorage.getItem('user') as string) || {};
 
   useEffect(() => {
     const getData = async () => {
-      const data = await getCertainData(`movie/${id}?append_to_response=videos`);
+      // eslint-disable-next-line max-len
+      const data = await getCertainData(`movie/${id}?append_to_response=videos,credits,recommendations,similar,account_states,watch/providers,images&include_image_language=${i18n.language},null`);
+
       const seenRecently = JSON.parse(localStorage.getItem('seenRecently') || '[]');
       if (!seenRecently.includes(data.id)) {
-        localStorage.setItem('seenRecently', JSON
-          .stringify([...seenRecently, data.id]));
+        localStorage.setItem('seenRecently', JSON.stringify([...seenRecently, data.id]));
       }
-
-      const savedUser = JSON.parse(localStorage.getItem('user') as string) || {};
-      if (savedUser.id) {
-        const userInfo = await getCertainData(`movie/${id}/account_states`);
-        setUserMovieInfo(userInfo);
-      }
-      const providersData = await getCertainData(`movie/${id}/watch/providers`);
-      const videos = await getVideos(id as string);
-
-      const similarData = movie.status === 'Released'
-        ? await getCertainData(`movie/${id}/recommendations`)
-        : await getCertainData(`movie/${id}/similar`);
-      const castData = await getCertainData(`movie/${id}/credits`);
-      const imagesData = await getCertainData(`movie/${id}/images?
-      &include_image_language=${i18n.language},null`);
-
-      const { backdrops, posters } = imagesData;
-      setMovieInfo({
-        movie: data,
-        providers: savedUser.id
-          ? providersData.results[savedUser.iso_3166_1]
-          : providersData.results[i18n.language === 'en' ? 'US' : 'BR'],
-        similars: similarData,
-        cast: castData.cast,
-        images: [backdrops, posters.slice(0, 10)].flat(),
-        videos: [data.videos.results, videos].flat(),
-      });
+      if (savedUser.id) setUserMovieInfo(data.account_states);
+      setMovie(data);
     };
     getData();
-  }, [id, userMovieInfo]);
-
-  const { movie, providers, similars, cast, images, videos } = infoMovie;
+  }, [i18n.language, id, savedUser.id, userMovieInfo]);
 
   const {
     genres,
@@ -83,7 +51,22 @@ export default function Movie() {
     tagline,
     title,
     vote_average,
-  } = infoMovie.movie;
+    credits,
+    similar,
+  } = movie;
+
+  let { recommendations, videos, images } = movie;
+  recommendations = (recommendations?.results.length > 10
+    ? recommendations?.results : similar?.results)
+    ?.filter((rec: MovieProps) => rec.backdrop_path
+    && rec.poster_path && rec.overview && rec.title);
+
+  videos = [videos?.results].flat() as VideoProps[];
+  images = [images?.backdrops, images?.posters.slice(0, 10)].flat();
+
+  const providers = savedUser.id
+    ? movie['watch/providers']?.results[savedUser.iso_3166_1]
+    : movie['watch/providers']?.results[i18n.language === 'en' ? 'US' : 'BR'];
 
   const hoursWatch = Math.floor(+runtime / 60);
   const minutesWath = +runtime % 60;
@@ -92,7 +75,7 @@ export default function Movie() {
   const closeModal = () => setIsOpen(false);
 
   const handleLogged = async (type?: 'favorite' | 'watchlist') => {
-    const savedUser = JSON.parse(localStorage.getItem('user') as string) || {} as any;
+    savedUser = JSON.parse(localStorage.getItem('user') as string) || {} as any;
     if (savedUser.id) {
       await (type
         ? handleLoggedMovies(id as string, savedUser.id, !userMovieInfo[type], type)
@@ -119,9 +102,9 @@ export default function Movie() {
 
   const searchTrailer = () => {
     const trailer = videos
-      ?.find(({ name, official }) => name === 'Main Trailer' && official);
+      ?.find(({ name, official }: VideoProps) => name === 'Main Trailer' && official);
     if (trailer) return trailer;
-    return videos?.find(({ type }) => type === 'Trailer');
+    return videos?.find(({ type }: VideoProps) => type === 'Trailer');
   };
 
   return (
@@ -171,13 +154,18 @@ export default function Movie() {
             </p>
             <div>
               <p>{t('movie.genres')}</p>
-              {genres?.slice(0, 3)?.map(({ name }) => <p key={ name }>{name}</p>)}
+              <ul>
+                {genres?.slice(0, 3)?.map(({ name }) => <li key={ name }>{name}</li>)}
+              </ul>
             </div>
             <p>{overview}</p>
-            {!!cast.length && (
+            {!!credits.cast.length && (
               <div>
-                <Link to={ `/cast/${movie.id}` }>{t('movie.seeFullCast')}</Link>
-                <MovieCarousel movies={ cast?.slice(0, 12) } text={ t('movie.cast') } />
+                <Link to={ `/credits.cast/${movie.id}` }>{t('movie.seeFullCast')}</Link>
+                <MovieCarousel
+                  movies={ credits.cast?.slice(0, 12) }
+                  text={ t('movie.cast') }
+                />
               </div>)}
             {homepage
             && (
@@ -190,11 +178,11 @@ export default function Movie() {
               { !providers ? <p>{t('movie.noServicesFound')}</p>
                 : (<ProvidersCard providers={ providers } />)}
             </div>
-            {!!similars.length && (
+            {!!recommendations?.length && (
               <div>
                 <p>{t('movie.similars')}</p>
                 <MovieCarousel
-                  movies={ similars.slice(0, 12) }
+                  movies={ recommendations?.slice(0, 12) }
                   text={ t('movie.moreLikeThis') }
                 />
               </div>
