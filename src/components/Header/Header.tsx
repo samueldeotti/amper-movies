@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getSearched } from '../../utils';
 import {
@@ -16,7 +16,7 @@ import PersonCard from '../PersonCard/PersonCard';
 import Menu from '../Menu/Menu';
 
 export default function Header() {
-  const { id } = useParams();
+  // const { id } = useParams();
   let savedSearch = JSON.parse(localStorage.getItem('search') || '[]');
 
   const { pathname } = window.location;
@@ -32,19 +32,19 @@ export default function Header() {
 
   const handleScroll = () => {
     const { scrollY } = window;
-    if (pathname.split('/').length > 2) return;
+    if (pathname.split('/').length > 2 || pathname.includes('search')) return;
     if (scrollY > 500) setshowMenu(true);
     else setshowMenu(false);
   };
 
   useEffect(() => {
-    if (pathname.split('/').length > 2) setshowMenu(true);
+    if (pathname.split('/').length > 2 || pathname.includes('search')) setshowMenu(true);
     else setshowMenu(false);
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [data, id, search, pathname]);
+  }, [pathname]);
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -131,7 +131,7 @@ export default function Header() {
                           ? data.slice(0, 8).map((movie: any) => (
                             <SearchLi key={ movie.id } onClick={ saveSearch }>
                               {movie.title
-                                ? <MovieCard movie={ movie } />
+                                ? <MovieCard movie={ movie } search />
                                 : <PersonCard personInfo={ movie } />}
                             </SearchLi>
                           )) : !isLoading && <SearchLi>{t('search.noResults')}</SearchLi>}

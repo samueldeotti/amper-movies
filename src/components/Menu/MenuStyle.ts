@@ -6,10 +6,9 @@ export const NavigationDiv = styled.div<{ show: boolean }>`
   right: 0px;
   z-index: 3;
   width: 150px;
-  transition: 0.5s;
   color: ${({ show }) => (show ? '#333;' : '#fff;')};
   ${({ show }) => (show
-    ? 'transition: 1s; background-color: #fff;' : 'background-color: transparent;')}
+    ? 'background-color: #fff;' : 'background-color: transparent;')}
   backdrop-filter: blur(40px);
   border-radius: ${({ show }) => (show ? '0' : '8px')};
 `;
@@ -109,7 +108,6 @@ export const LoginButton = styled.a`
 `;
 
 export const NavigationText = styled.p`
-  transition: 0.5s;
   padding: 0 5px;
   height: 30px;
 `;

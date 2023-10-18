@@ -11,7 +11,7 @@
     "released": "Not released yet",
     "rate": {
       "rateText": "Rate",
-      "change": "Change rate",
+      "remove": "Change rate",
       "add": "Add rate"
     },
     "watchlist": {
@@ -68,6 +68,7 @@
   "providers": {
     "buy": "Buy",
     "rent": "Rent",
-    "stream": "Stream"
-  }
+    "stream,": "Stream"
+  },
+  "languages": "Languages"
 }

@@ -83,7 +83,7 @@ export default function Menu() {
           style={ { '--i': 1 } as React.CSSProperties }
           show={ showMenu }
         >
-          <NavigationText>Languages</NavigationText>
+          <NavigationText>{t('languages')}</NavigationText>
         </Li>
         <Li style={ { '--i': 2 } as React.CSSProperties } show={ showMenu }>
           <LoginButton>

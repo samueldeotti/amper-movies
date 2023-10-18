@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const PopularDiv = styled.div`
   position: relative;
@@ -32,7 +33,7 @@ export const CardImage = styled.img<{ selected: boolean }>`
   /* transform: scale(0.8, 1); */
 `;
 
-export const CardButton = styled.button`
+export const CardButton = styled(Link)`
 position: absolute;
 bottom: 10%;
 left: 50%;

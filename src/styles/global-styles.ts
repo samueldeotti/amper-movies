@@ -28,6 +28,10 @@ const GlobalStyles = createGlobalStyle`
     padding: 0;
   }
 
+  body {
+    overflow-x: hidden;
+  }
+
 `;
 
 export default GlobalStyles;

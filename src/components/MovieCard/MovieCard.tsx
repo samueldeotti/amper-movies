@@ -6,19 +6,28 @@ import { useEffect, useState } from 'react';
 import { FiStar } from 'react-icons/fi';
 import { ActorMoviesProps, DetailsProps,
   MovieDetailsProps, MovieProps } from '../../types';
-import './style.css';
+import { MovieContainer, CardPoster, CardImage, SearchDiv,
+  CardInfo, CardTitle, Director, Rating, StarsDiv,
+  StarsSpan, RatingSpan, TagsDiv, TagsSpan, ReleaseSpan,
+  MovieDetails, MovieCast, CastUl, CastLi, CastImage, SearchInfo,
+} from './MovieCardStyle';
+
 import { getCertainData } from '../../utils';
 
 type MovieCardProps = {
   movie: MovieProps | MovieDetailsProps | ActorMoviesProps;
   character?: string;
   type?: string
+  search?: boolean;
 };
 
-export default function MovieCard({ movie, character = '', type = '' }: MovieCardProps) {
+export default function MovieCard({ movie, character = '',
+  type = '', search = false }: MovieCardProps) {
   const { i18n } = useTranslation();
 
   const [details, setDetails] = useState<DetailsProps>({} as DetailsProps);
+
+  const { pathname } = window.location;
 
   useEffect(() => {
     const getDetails = async () => {
@@ -27,9 +36,7 @@ export default function MovieCard({ movie, character = '', type = '' }: MovieCar
       setDetails({ images, credits, genres });
     };
     getDetails();
-  }, [movie.id]);
-
-  console.log(details);
+  }, [movie.id, pathname]);
 
   const formatDate = (date: string) => {
     if (date) {
@@ -47,64 +54,100 @@ export default function MovieCard({ movie, character = '', type = '' }: MovieCar
   const imageUrl = import.meta.env.VITE_IMG;
 
   return (
-    <Link to={ `/movie/${movie.id}` } className="card" style={ { userSelect: 'none' } }>
-      <div className="poster">
-        <img src={ poster ? imageUrl + poster : imageUrl + movie.poster_path } alt="" />
-      </div>
-      <div className="details">
-        <h2 className="title">{movie.title}</h2>
-        {director && <h3>{`Directed by: ${director}`}</h3>}
-        <div className="rating">
-          {type === 'Upcoming' ? (
-            <>
-              <span className="stars">Release Date:</span>
-              <span className="rate">{formatDate(movie.release_date)}</span>
-            </>
-          ) : (
-            <>
-              <div className="starRating">
-                <span className="stars"><FiStar className="teste" /></span>
-                <span className="stars"><FiStar className="teste" /></span>
-                <span className="stars"><FiStar className="teste" /></span>
-                <span className="stars"><FiStar className="teste" /></span>
-                <span className="stars"><FiStar className="teste" /></span>
-              </div>
-              {/* <meter min="1" max="10" value={ movie.vote_average.toFixed(1) } /> */}
-              <span className="rate">{movie.vote_average.toFixed(1)}</span>
-            </>
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      { search ? (
+        <SearchDiv to={ `/movie/${movie.id}` }>
+          <img
+            src={ imageUrl + movie.poster_path }
+            alt="movie poster"
+          />
+          <SearchInfo>
+            <p>{movie.title}</p>
+            <p>{movie.release_date.slice(0, 4)}</p>
+            <p>
+              {`${details.credits?.cast[0]?.name}, ${details.credits?.cast[1]?.name}`}
+            </p>
+          </SearchInfo>
+        </SearchDiv>
+      )
+        : (
+          <MovieContainer
+            to={ `/movie/${movie.id}` }
+            className="card"
+            style={ { userSelect: 'none' } }
+            search={ pathname.includes('search') }
+          >
+            <CardPoster className="poster" style={ { userSelect: 'none' } }>
+              <CardImage
+                src={ poster ? imageUrl + poster : imageUrl + movie.poster_path }
+                alt="movie poster"
+              />
+            </CardPoster>
+            <CardInfo className="details">
+              <CardTitle>{movie.title}</CardTitle>
+              {director && <Director>{`Directed by: ${director}`}</Director>}
+              <Rating>
+                {type === 'Upcoming' ? (
+                  <>
+                    <ReleaseSpan>Release Date:</ReleaseSpan>
+                    <span>{formatDate(movie.release_date)}</span>
+                  </>
+                ) : (
+                  <>
+                    <StarsDiv>
+                      <StarsSpan><FiStar /></StarsSpan>
+                      <StarsSpan><FiStar /></StarsSpan>
+                      <StarsSpan><FiStar /></StarsSpan>
+                      <StarsSpan><FiStar /></StarsSpan>
+                      <StarsSpan><FiStar /></StarsSpan>
+                    </StarsDiv>
+                    {/* <meter min="1" max="10" value={ movie.vote_average.toFixed(1) } /> */}
+                    <RatingSpan>
+                      {movie
+                        .vote_average.toFixed(1) === '0.0'
+                        ? '' : movie.vote_average.toFixed(1)}
+                    </RatingSpan>
+                  </>
 
-          )}
-        </div>
-        {details.genres
+                )}
+              </Rating>
+              {!!details.genres?.length
         && (
-          <div className="tags">
-            <span>{details?.genres[0]?.name}</span>
-            {details?.genres[1]?.name && <span>{details?.genres[1]?.name}</span>}
-          </div>)}
-        <div className="info">
-          <p>
-            {movie.overview.split(' ').slice(0, 9).join(' ').replace(/,\s*$/, '')}
-            ...
-          </p>
-        </div>
-        <div className="cast">
-          <h4>Cast</h4>
-          <ul>
-            {details.credits?.cast?.slice(0, 5).map((person) => (
-              <li key={ person.id } title={ person.name }>
-                <img
-                  src={ person.profile_path
-                    ? imageUrl + person.profile_path : '/anonym.png' }
-                  alt="actor"
-                />
-              </li>
-            ))}
-          </ul>
+          <TagsDiv className="tags">
+            <TagsSpan>{details?.genres[0]?.name}</TagsSpan>
+            {details?.genres[1]?.name && <TagsSpan>{details?.genres[1]?.name}</TagsSpan>}
+          </TagsDiv>)}
+              <MovieDetails className="info">
+                <p>
+                  {movie.overview.split(' ').slice(0, 9).join(' ').replace(/,\s*$/, '')}
+                  ...
+                </p>
+              </MovieDetails>
+              <MovieCast className="cast">
+                <h4>Cast</h4>
+                <CastUl>
+                  {details.credits?.cast?.slice(0, 5).map((person) => (
+                    <CastLi key={ person.id } title={ person.name }>
+                      <Link to={ `/person/${person.name.replace(' ', '')}/${person.id}` }>
+                        <CastImage
+                          src={ person.profile_path
+                            ? imageUrl + person.profile_path : '/anonym.png' }
+                          alt="actor"
+                        />
+                      </Link>
+                    </CastLi>
+                  ))}
+                </CastUl>
 
-        </div>
-      </div>
-      {character && <p>{character}</p>}
-    </Link>
+              </MovieCast>
+            </CardInfo>
+            {character && <p>{character}</p>}
+          </MovieContainer>
+        ) }
+
+    </>
+
   );
 }
 

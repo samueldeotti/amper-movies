@@ -6,10 +6,16 @@ import { getCertainData, getSearched } from '../../utils';
 import { ActorMoviesProps, MovieProps } from '../../types';
 import MovieCard from '../../components/MovieCard/MovieCard';
 import PersonCard from '../../components/PersonCard/PersonCard';
+import { CardsContainer } from './SearchStyle';
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export default function SearchedMovies() {
   const [movies, setMovies] = useState<MovieProps[]>([]);
   const [persons, setPersons] = useState<ActorMoviesProps[]>([]);
+  const [setAll, setSetAll] = useState({
+    movies: false,
+    person: false,
+  });
   const { t } = useTranslation();
 
   const { id, name } = useParams();
@@ -39,20 +45,30 @@ export default function SearchedMovies() {
             {!pathname.includes('genre') && (
               <div>
                 <p>{t('search.people')}</p>
-                {persons.length ? persons.map((person) => (
-                  <PersonCard
-                    key={ person.id }
-                    personInfo={ person }
-                  />
-                )) : (<p>{t('search.noResults')}</p>)}
+                {persons.length ? (
+                  <div>
+                    {(setAll.person ? persons : persons.slice(0, 3)).map((person) => (
+                      <PersonCard
+                        key={ person.id }
+                        personInfo={ person }
+                      />
+                    ))}
+                    <button
+                      onClick={ () => setSetAll({ ...setAll, person: !setAll.person }) }
+                    >
+                      {`${setAll.person ? 'Hide' : 'Show All'}`}
+                    </button>
+                  </div>
+                ) : (<p>{t('search.noResults')}</p>)}
               </div>
             )}
             <div>
-              <p>{`${t('search.resultsFor')} ${name || ''}`}</p>
-              {movies.length ? movies.map((movie) => (
-                <MovieCard key={ movie.id } movie={ movie } />
-              ))
-                : <p>{t('search.noResults')}</p>}
+              <p>{`${t('search.resultsFor')} ${searchParam || name || ''}`}</p>
+              {movies.length ? (
+                <CardsContainer>
+                  {movies.map((movie) => <MovieCard key={ movie.id } movie={ movie } />)}
+                </CardsContainer>
+              ) : <p>{t('search.noResults')}</p>}
             </div>
           </div>
         )}

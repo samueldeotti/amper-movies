@@ -22,7 +22,8 @@ export default function PopularCard({ movies }: PopularProps) {
       <PopularDiv>
         {movies.map((movie, index) => (
           <CardContainer key={ movie.id } onClick={ () => setSelected(index) }>
-            {selected === index && <CardButton>Details</CardButton>}
+            {selected === index
+            && <CardButton to={ `/movie/${movie.id}` }>Details</CardButton>}
             <CardImage
               selected={ selected === index }
               src={ imageUrl + movie.poster_path }

@@ -10,8 +10,6 @@ export default function Home() {
   const [homeMovies, setHomeMovies] = useState({} as HomeMoviesProps);
   const { t } = useTranslation();
 
-  const imageUrl = import.meta.env.VITE_IMG;
-
   useEffect(() => {
     const getData = async () => {
       const { popularData,

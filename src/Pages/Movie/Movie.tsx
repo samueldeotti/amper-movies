@@ -1,13 +1,10 @@
-/* eslint-disable sonarjs/cognitive-complexity */
-/* eslint-disable complexity */
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable react/jsx-closing-tag-location */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
+
 import { CastDetailsProps,
   MovieDetailsProps,
   ProvidersProps, ImageDetailsProps, UserInfoMovie, VideoProps } from '../../types';
@@ -16,6 +13,7 @@ import { addRating,
 import ProvidersCard from '../../components/ProvidersCard/ProvidersCard';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
 import MediaButtons from '../../components/MediaButtons/MediaButtons';
+import FavButtons from '../../components/FavButtons/FavButtons';
 
 export default function Movie() {
   const [infoMovie, setMovieInfo] = useState({
@@ -59,7 +57,6 @@ export default function Movie() {
       &include_image_language=${i18n.language},null`);
 
       const { backdrops, posters } = imagesData;
-
       setMovieInfo({
         movie: data,
         providers: savedUser.id
@@ -120,20 +117,19 @@ export default function Movie() {
       : format(new Date(release_date), 'MM/dd/yyyy');
   }
 
+  const searchTrailer = () => {
+    const trailer = videos
+      ?.find(({ name, official }) => name === 'Main Trailer' && official);
+    if (trailer) return trailer;
+    return videos?.find(({ type }) => type === 'Trailer');
+  };
+
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {!movie.id ? <p>Loading...</p>
         : (
           <div>
-            {/* {images.map(({ file_path }) => (
-              <img
-                key={ file_path }
-                src={ imageUrl + file_path }
-                alt={ title }
-                style={ { width: 200 } }
-              />
-            ))} */}
             <h2>{title}</h2>
             <p>{tagline}</p>
             <div style={ { display: 'flex', justifyContent: 'center' } }>
@@ -144,38 +140,26 @@ export default function Movie() {
                     ? Number(vote_average).toFixed(1) : t('movie.released')}
                 </p>
               </div>
-              <div>
-                <p>
-                  {userMovieInfo.rated
-                    ? t('movie.rate.change') : t('movie.rate.add')}
-                </p>
-                <button onClick={ openModal }>
-                  <img src="/starIcon.png" alt="" style={ { width: 50 } } />
-                </button>
-              </div>
-              <div>
-                <p>
-                  {userMovieInfo.favorite
-                    ? t('movie.favorite.remove') : t('movie.favorite.add')}
-                </p>
-                <button onClick={ () => handleLogged('favorite') }>
-                  <img src="/favHearth.png" alt="" style={ { width: 50 } } />
-                </button>
-              </div>
-              <div>
-                <p>
-                  {userMovieInfo.watchlist
-                    ? t('movie.watchlist.remove') : t('movie.watchlist.add')}
-                </p>
-                <button onClick={ () => handleLogged('watchlist') }>
-                  <img src="/wathclist.png" alt="" style={ { width: 50 } } />
-                </button>
-              </div>
+              <FavButtons
+                textCondition={ userMovieInfo.rated }
+                typeButton="rate"
+                modal={ openModal }
+              />
+              <FavButtons
+                typeButton="favorite"
+                textCondition={ userMovieInfo.favorite }
+                handleLogged={ () => handleLogged('favorite') }
+              />
+              <FavButtons
+                typeButton="watchlist"
+                textCondition={ userMovieInfo.watchlist }
+                handleLogged={ () => handleLogged('watchlist') }
+              />
             </div>
             <img src={ imageUrl + poster_path } alt="" />
+            { searchTrailer() ? <iframe width="560" height="315" src={ `https://www.youtube.com/embed/${searchTrailer()?.key}` } title="YouTube video player" frameBorder="0" allow="encrypted-media; gyroscope; picture-in-picture; web-share" /> : <div><p>No Trailer Found</p></div>}
             <MediaButtons videos={ videos } images={ images } />
             <p>
-              {/* ESSAS VERIFCAÇÕES PODEM SER FEITAS COM O ITEM, MOVIE.STATUS === RELEASED */}
               {vote_average > +0
                 ? release_date?.split('-')[0]
                 : `${t('movie.releaseDate')} ${formattedDate}`}
@@ -190,29 +174,31 @@ export default function Movie() {
               {genres?.slice(0, 3)?.map(({ name }) => <p key={ name }>{name}</p>)}
             </div>
             <p>{overview}</p>
-            {!!cast.length && <div>
-              <Link to={ `/cast/${movie.id}` }>{t('movie.seeFullCast')}</Link>
-              <MovieCarousel movies={ cast?.slice(0, 12) } text={ t('movie.cast') } />
-            </div>}
+            {!!cast.length && (
+              <div>
+                <Link to={ `/cast/${movie.id}` }>{t('movie.seeFullCast')}</Link>
+                <MovieCarousel movies={ cast?.slice(0, 12) } text={ t('movie.cast') } />
+              </div>)}
             {homepage
-            && <p>
-              {t('movie.learnMore')}
-              <a href={ homepage } target="blanck">{` ${title}`}</a>
-            </p>}
+            && (
+              <p>
+                {t('movie.learnMore')}
+                <a href={ homepage } target="_blanck">{` ${title}`}</a>
+              </p>)}
             <div>
               <p>{t('movie.whereWatch')}</p>
               { !providers ? <p>{t('movie.noServicesFound')}</p>
                 : (<ProvidersCard providers={ providers } />)}
             </div>
-            <div>
-              {!!similars.length
-              && <p>{t('movie.similars')}</p>
-              && <MovieCarousel
-                movies={ similars.slice(0, 12) }
-                text={ t('movie.moreLikeThis') }
-              />}
-            </div>
-
+            {!!similars.length && (
+              <div>
+                <p>{t('movie.similars')}</p>
+                <MovieCarousel
+                  movies={ similars.slice(0, 12) }
+                  text={ t('movie.moreLikeThis') }
+                />
+              </div>
+            )}
             <Modal
               isOpen={ isOpen }
               onRequestClose={ closeModal }

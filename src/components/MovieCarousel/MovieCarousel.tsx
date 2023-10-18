@@ -17,51 +17,65 @@ export default function MovieCarousel({ movies, text, type = '' }: MovieCardProp
 
   const itemsContainer = useRef<HTMLDivElement>(null);
 
-  // functions
   function handleMouseDown(e: React.MouseEvent<HTMLDivElement>
   | React.TouchEvent<HTMLDivElement>) {
     setIsDown(true);
-    if (e.pageX === undefined) {
+    if ('touches' in e) {
       setStartX(e.touches[0].pageX - (itemsContainer.current?.offsetLeft || 0));
-    } else setStartX(e.pageX - (itemsContainer.current?.offsetLeft || 0));
+    } else {
+      setStartX(e.pageX - (itemsContainer.current?.offsetLeft || 0));
+    }
     setScrollLeftState(itemsContainer.current?.scrollLeft || 0);
     setStateMouseMoved(0);
   }
 
-  function handleMouseMove(e: React.MouseEvent | React.TouchEvent) {
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>
+  | React.TouchEvent<HTMLDivElement>) {
     if (!isDown) return;
-    const currentMousePositionInsideContainer = e.pageX === undefined
-      ? e.touches[0].pageX - (itemsContainer.current?.offsetLeft || 0)
-      : e.pageX - (itemsContainer.current?.offsetLeft || 0);
+    const currentMousePositionInsideContainer = 'touches' in e
+      ? (e.touches[0].pageX - (itemsContainer.current?.offsetLeft || 0))
+      : (e.pageX - (itemsContainer.current?.offsetLeft || 0));
 
     setStateMouseMoved(currentMousePositionInsideContainer - startX);
   }
 
   useEffect(() => {
-    itemsContainer.current.scrollLeft = (scrollLeftState || 0) - mouseMoved;
-  }, [scrollLeftState, mouseMoved]);
+    if (itemsContainer.current) {
+      itemsContainer.current.scrollLeft = ((scrollLeftState || 0) - mouseMoved);
+    }
+  }, [scrollLeftState, mouseMoved, itemsContainer]);
 
   return (
-    <div
-      style={ { display: 'flex', width: '100vw', overflow: 'hidden', userSelect: 'none', cursor: isDown ? 'grabbing' : 'grab' } }
-      ref={ itemsContainer }
+    <div>
+      <p style={ { marginLeft: '10px' } }>{text}</p>
+      <div
+        style={ {
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100vw',
+          overflow: 'hidden',
+          userSelect: 'none',
+          cursor: isDown ? 'grabbing' : 'grab' } }
+        ref={ itemsContainer }
       // MOUSE EVENTS
-      onMouseDown={ (e) => handleMouseDown(e) }
-      onMouseUp={ () => setIsDown(false) }
-      onMouseLeave={ () => setIsDown(false) }
-      onMouseMove={ (e) => handleMouseMove(e) }
+        onMouseDown={ (e) => handleMouseDown(e) }
+        onMouseUp={ () => setIsDown(false) }
+        onMouseLeave={ () => setIsDown(false) }
+        onMouseMove={ (e) => handleMouseMove(e) }
       // TOUCH EVENTS
-      onTouchStart={ (e) => handleMouseDown(e) }
-      onTouchEnd={ () => setIsDown(false) }
-      onTouchCancel={ () => setIsDown(false) }
-      onTouchMove={ (e) => handleMouseMove(e) }
-    >
-      <p>{text}</p>
-      <div style={ { display: 'flex', pointerEvents: isDown ? 'none' : 'all' } }>
-        {movies.map((movie: any) => (movie?.title
-          ? <MovieCard key={ movie.id } movie={ movie } type={ type } />
-          : <CastCard key={ movie.id } cast={ movie } />))}
+        onTouchStart={ (e) => handleMouseDown(e) }
+        onTouchEnd={ () => setIsDown(false) }
+        onTouchCancel={ () => setIsDown(false) }
+        onTouchMove={ (e) => handleMouseMove(e) }
+      >
+        <div style={ { display: 'flex', pointerEvents: isDown ? 'none' : 'all' } }>
+          {movies.map((movie: any) => (movie?.title
+            ? <MovieCard key={ movie.id } movie={ movie } type={ type } />
+            : <CastCard key={ movie.id } cast={ movie } />))}
+        </div>
       </div>
+
     </div>
   );
 }
