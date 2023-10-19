@@ -28,7 +28,8 @@ export default function Header() {
   const [showResults, setShowResults] = useState(false);
   const [showMenu, setshowMenu] = useState(false);
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  console.log(i18n.language);
 
   const handleScroll = () => {
     const { scrollY } = window;
@@ -38,13 +39,14 @@ export default function Header() {
   };
 
   useEffect(() => {
+    document.documentElement.lang = i18n.language;
     if (pathname.split('/').length > 2 || pathname.includes('search')) setshowMenu(true);
     else setshowMenu(false);
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [pathname]);
+  }, [pathname, i18n.language]);
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
