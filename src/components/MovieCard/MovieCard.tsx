@@ -102,7 +102,6 @@ export default function MovieCard({ movie, character = '',
                       <StarsSpan><FiStar /></StarsSpan>
                       <StarsSpan><FiStar /></StarsSpan>
                     </StarsDiv>
-                    {/* <meter min="1" max="10" value={ movie.vote_average.toFixed(1) } /> */}
                     <RatingSpan>
                       {movie
                         .vote_average.toFixed(1) === '0.0'

@@ -123,8 +123,9 @@ export default function Header() {
             onBlur={ hideSavedSearch }
             onFocus={ showSavedSearch }
             onChange={ handleChange }
+            show={ showMenu }
           />
-          <HeaderButton type="submit">Lupa</HeaderButton>
+          <HeaderButton type="submit" show={ showMenu }>Lupa</HeaderButton>
           {showResults
                     && (
                       <SearchUl show={ search ? 'visible' : 'hidden' }>

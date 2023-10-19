@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+const shadow = 'black 0.1em 0.1em 0.1em;';
+
 export const HeaderStyled = styled.header<{ show: boolean, path: string }>`
   position: ${({ path }) => (path === '/' ? 'fixed' : 'relative')};
   top: 0;
@@ -17,6 +19,7 @@ export const HeaderStyled = styled.header<{ show: boolean, path: string }>`
 
 export const Logo = styled.h1<{ show: boolean }>`
   font-size: 32px;
+  text-shadow: ${({ show }) => (!show ? 'black 0.1em 0.1em 0.2em' : 'none')};
   color: ${({ show }) => (show ? '#333' : '#fff')};
 `;
 
@@ -24,18 +27,20 @@ export const HeaderForm = styled.form<{ show: boolean, search: string }>`
   position: relative;
   display: flex;
   align-items: center;
-  ${({ show }) => (show ? 'background-color: #f6f6f6' : 'backdrop-filter: blur(20px)')};
-  /* background-color: rgba(22, 22, 22, 0.8); */
+  ${({ show }) => (show ? 'background-color: #f6f6f6' : 'backdrop-filter: blur(40px)')};
+  background-color: ${({ show }) => (!show ? 'rgba(0, 0, 0, 0.05)' : 'transparent')};
+  outline: ${({ show }) => (!show ? 'none' : '1px solid rgba(0, 0, 0, 0.7)')};
   justify-content: center;
   width: 400px;
   border-radius: 8px;
   padding-left: 4px;
-  /* outline: 1px solid #fff; */
   transition: 0.5s;
+  /* outline: 1px solid rgba(255,255,255,0.2); */
 
   &:focus-within {
     border-radius: ${({ search }) => (search ? '8px 8px 0 0' : '8px')} ;
     outline: none;
+    transition: 0.5s;
   }
   &:not(:focus-within) {
     transition: 0.3s;
@@ -43,25 +48,32 @@ export const HeaderForm = styled.form<{ show: boolean, search: string }>`
   }
 `;
 
-export const HeaderInput = styled.input`
-  color: black;
+export const HeaderInput = styled.input<{ show: boolean }>`
+  color: ${({ show }) => (show ? '#333' : '#fff')};
+  /* text-shadow: ${({ show }) => (!show ? shadow : 'none')}; */
+  
   border: none;
   min-width: 80%;
   padding: 8px;
   margin-right: 10px;
   background-color: transparent;
 
+  &::placeholder {
+    color: ${({ show }) => (!show ? '#fff' : '#000')};
+    text-shadow: ${({ show }) => (!show ? shadow : 'none')};
+  }
 
   &:focus {
     outline: none;
   }
 `;
 
-export const HeaderButton = styled.button`
+export const HeaderButton = styled.button<{ show: boolean }>`
   background-color: transparent;
   min-height: 100%;
   margin: 0 auto;
-  color: #333;
+  color: ${({ show }) => (!show ? '#fff' : '#000')};
+  text-shadow: ${({ show }) => (!show ? shadow : 'none')};
   width: 100%;
   border: none;
   cursor: pointer;
@@ -84,7 +96,6 @@ export const SearchUl = styled.ul<{ show: string }>`
   left: 0;
   width: 100%;
   height: 100vh;
-  /* overflow: scroll; */
   background-color: rgba(22, 22, 22, 1);
   border-radius: 0 0 8px 8px;
   padding: 8px;

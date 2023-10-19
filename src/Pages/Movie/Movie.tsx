@@ -180,7 +180,6 @@ export default function Movie() {
             </div>
             {!!recommendations?.length && (
               <div>
-                <p>{t('movie.similars')}</p>
                 <MovieCarousel
                   movies={ recommendations?.slice(0, 12) }
                   text={ t('movie.moreLikeThis') }
