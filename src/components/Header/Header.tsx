@@ -30,7 +30,6 @@ export default function Header() {
   const [showMenu, setshowMenu] = useState(false);
 
   const { t, i18n } = useTranslation();
-  console.log(i18n.language);
 
   const handleScroll = () => {
     const { scrollY } = window;

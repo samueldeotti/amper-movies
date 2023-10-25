@@ -111,9 +111,9 @@ export default function Movie() {
   };
 
   const director = movie?.credits?.crew
-    ?.find((person) => person.job === 'Director')?.name;
+    ?.find((person) => person.job === 'Director')?.name || 'Not informed';
   const writer = movie?.credits?.crew
-    ?.find((person) => person.job === 'Writer')?.name;
+    ?.find((person) => person.job === 'Writer')?.name || 'Not informed';
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -166,11 +166,14 @@ export default function Movie() {
             </TimeContainer>
             <ImagesContainer>
               <MovieImage src={ imageUrl + poster_path } alt="movie poster" />
-              { searchTrailer() ? <iframe src={ `https://www.youtube.com/embed/${searchTrailer()?.key}` } title="YouTube video player" frameBorder="0" allow="encrypted-media; gyroscope; picture-in-picture; web-share" style={ { width: '218rem', height: '100%' } } /> : <div><p>No Trailer Found</p></div>}
+              { searchTrailer() ? <iframe src={ `https://www.youtube.com/embed/${searchTrailer()?.key}` } title="YouTube video player" frameBorder="0" allow="encrypted-media; gyroscope; picture-in-picture; web-share" style={ { width: '218rem', height: '100%' } } /> : <div style={ { width: '218rem', height: '100%' } }><p>No Trailer Found</p></div>}
               <MediaButtons videos={ videos } images={ images } />
             </ImagesContainer>
             <GenresList>
-              {genres?.slice(0, 3)?.map(({ name }) => <Genre key={ name }>{name}</Genre>)}
+              {genres?.slice(0, 3)?.map((genre) => (
+                <Genre key={ genre.id }>
+                  <Link to={ `/genre/${genre.id}/${genre.name}` }>{genre.name}</Link>
+                </Genre>))}
             </GenresList>
             <DecriptionContainer>
               <MovieDescription>{overview}</MovieDescription>
