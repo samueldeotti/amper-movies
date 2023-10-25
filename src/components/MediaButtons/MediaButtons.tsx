@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import Modal from 'react-modal';
 import { useState } from 'react';
 import { ImageDetailsProps, VideoProps } from '../../types';
-import { customStyles } from '../../utils';
+import { ButtonsContainer, ModalContainer } from './MediaStyles';
 
 type MediaButtonsProps = {
   videos?: VideoProps[] | undefined;
@@ -38,7 +37,7 @@ export default function MediaButtons({
   };
 
   return (
-    <div>
+    <ButtonsContainer>
       {pathname.includes('movie')
       && (
         <button
@@ -54,28 +53,30 @@ export default function MediaButtons({
         {`${t('photos')} ${images.length > 99 ? '99+' : images.length}`}
       </button>
 
-      <Modal
+      <ModalContainer
         isOpen={ isOpen }
         onRequestClose={ closeModal }
-        style={ customStyles }
+        // style={ customStyles }
         contentLabel="Rate Modal"
         ariaHideApp={ false }
       >
         <button onClick={ closeModal }>X Close</button>
-        <button onClick={ backPosition }>{'<'}</button>
         <div>
           {isImage
             ? <img
                 src={ imageUrl + images[position]?.file_path }
                 alt=""
-                style={ { maxHeight: 400 } }
+                style={ { maxHeight: 800, width: '90%' } }
             />
-            : <iframe width="560" height="315" src={ `https://www.youtube.com/embed/${videos[position].key}` } title="YouTube video player" frameBorder="0" allow="encrypted-media; gyroscope; picture-in-picture; web-share" />}
+            : <iframe width="90%" height="800px" src={ `https://www.youtube.com/embed/${videos[position].key}` } title="YouTube video player" frameBorder="0" allow="encrypted-media; gyroscope; picture-in-picture; web-share" />}
         </div>
-        <p>{position + 1}</p>
-        <button onClick={ addPosition }>{'>'}</button>
-      </Modal>
+        <div>
+          <button onClick={ backPosition }>{'<'}</button>
+          <p>{position + 1}</p>
+          <button onClick={ addPosition }>{'>'}</button>
+        </div>
+      </ModalContainer>
 
-    </div>
+    </ButtonsContainer>
   );
 }

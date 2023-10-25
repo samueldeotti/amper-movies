@@ -6,6 +6,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { AiOutlineSearch } from 'react-icons/ai';
 import { getSearched } from '../../utils';
 import {
   HeaderStyled, SearchUl, SearchLi,
@@ -125,17 +126,22 @@ export default function Header() {
             onChange={ handleChange }
             show={ showMenu }
           />
-          <HeaderButton type="submit" show={ showMenu }>Lupa</HeaderButton>
+          <HeaderButton type="submit" show={ showMenu }><AiOutlineSearch /></HeaderButton>
           {showResults
                     && (
                       <SearchUl show={ search ? 'visible' : 'hidden' }>
-                        {isLoading && <li>Loading...</li>}
+                        {isLoading && (
+                          <SearchLi
+                            style={ { textAlign: 'center' } }
+                          >
+                            Loading...
+                          </SearchLi>)}
                         {!isLoading && !!data.length
                           ? data.slice(0, 8).map((movie: any) => (
                             <SearchLi key={ movie.id } onClick={ saveSearch }>
                               {movie.title
-                                ? <MovieCard movie={ movie } search />
-                                : <PersonCard personInfo={ movie } />}
+                                ? <MovieCard movie={ movie } ul search />
+                                : <PersonCard personInfo={ movie } ul />}
                             </SearchLi>
                           )) : !isLoading && <SearchLi>{t('search.noResults')}</SearchLi>}
                       </SearchUl>

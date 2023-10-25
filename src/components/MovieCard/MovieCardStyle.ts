@@ -5,7 +5,7 @@ export const MovieContainer = styled(Link)<{ search: boolean }>`
   margin: 20px 20px 20px 10px;
   position: relative;
   ${({ search }) => (search ? 'width: 200px;' : 'min-width: 18rem;')} 
-  /* width: 300px; */
+  width: 18rem;
   height: 26rem;
   border-radius: 20px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
@@ -153,15 +153,15 @@ export const CastImage = styled.img`
   max-width: 100%;
 `;
 
-export const SearchDiv = styled(Link)`
+export const SearchDiv = styled(Link)<{ list: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80px;
-  width: 100%;
-  margin: 6px 6px 6px 2px;
+  height: ${({ list }) => (list ? '80px' : '100px')}; 
+  max-width: ${({ list }) => (list ? '100%' : '40%')}; 
+  margin: 6px 6px 6px ${({ list }) => (list ? '2px' : '20px')};
   & img {
-    border-radius: 20px;
+    border-radius: ${({ list }) => (list ? '20px' : '10px')};
     width: 60px;
     margin-left: 0px;
   }
@@ -187,13 +187,3 @@ export const SearchInfo = styled.div`
     font-weight: bold;
   }
 `;
-
-// margin: 20px 20px 20px 10px;
-//   position: relative;
-//   ${({ search }) => (search ? 'width: 200px;' : 'min-width: 320px;')}
-//   width: 320px;
-//   height: 450px;
-//   border-radius: 20px;
-//   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-//   overflow: hidden;
-//   display: block;

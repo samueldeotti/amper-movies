@@ -10,12 +10,12 @@ export default function WatchProviders({
   const imageUrl = import.meta.env.VITE_IMG;
 
   return (
-    <div>
+    <div style={ { display: 'flex' } }>
       {providers[type] && <p>{options}</p>}
       {providers[type]?.map((provider: any) => {
         const { provider_name, logo_path } = provider;
         return (
-          <div key={ provider_name + type }>
+          <div key={ provider_name + type } style={ { display: 'flex' } }>
             {provider_name && logo_path && (
               <div>
                 <div>
@@ -29,7 +29,6 @@ export default function WatchProviders({
               </div>
             )}
           </div>
-
         );
       })}
     </div>

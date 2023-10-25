@@ -3,6 +3,7 @@ import { FaStar as Rated, FaRegStar as NotRated } from 'react-icons/fa';
 import { FaHeartCirclePlus as Fav, FaHeartCircleXmark as NotFav } from 'react-icons/fa6';
 import { BsFillBookmarkPlusFill as Watch,
   BsFillBookmarkXFill as NotWatch } from 'react-icons/bs';
+import { Button, ButtonsContainer } from './FavButtosStyle';
 
 type FavButtonsProps = {
   textCondition: boolean;
@@ -16,16 +17,16 @@ export default function FavButtons({ textCondition,
   const { t } = useTranslation();
 
   return (
-    <div>
+    <ButtonsContainer>
       <p>
         {textCondition
           ? t(`movie.${typeButton}.remove`) : t(`movie.${typeButton}.add`) }
       </p>
-      <button onClick={ typeButton === 'rate' ? modal : handleLogged } style={ { fontSize: '32px' } }>
+      <Button onClick={ typeButton === 'rate' ? modal : handleLogged }>
         {typeButton === 'rate' && (textCondition ? <Rated /> : <NotRated />) }
         {typeButton === 'favorite' && (textCondition ? <NotFav /> : <Fav />) }
         {typeButton === 'watchlist' && (textCondition ? <NotWatch /> : <Watch />) }
-      </button>
-    </div>
+      </Button>
+    </ButtonsContainer>
   );
 }

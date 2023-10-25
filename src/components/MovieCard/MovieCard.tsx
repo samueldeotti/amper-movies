@@ -19,10 +19,11 @@ type MovieCardProps = {
   character?: string;
   type?: string
   search?: boolean;
+  ul?: boolean;
 };
 
 export default function MovieCard({ movie, character = '',
-  type = '', search = false }: MovieCardProps) {
+  type = '', search = false, ul = false }: MovieCardProps) {
   const { i18n } = useTranslation();
 
   const [details, setDetails] = useState<DetailsProps>({} as DetailsProps);
@@ -57,7 +58,7 @@ export default function MovieCard({ movie, character = '',
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       { search ? (
-        <SearchDiv to={ `/movie/${movie.id}` }>
+        <SearchDiv to={ `/movie/${movie.id}` } list={ ul }>
           <img
             src={ imageUrl + movie.poster_path }
             alt="movie poster"
