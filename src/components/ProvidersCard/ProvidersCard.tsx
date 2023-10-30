@@ -23,13 +23,6 @@ export default function ProvidersCard({ providers }: ProvidersCardProps) {
       />
       <WatchProviders options={ t('providers.buy') } providers={ providers } type="buy" />
 
-      {providers.link
-        && <p>
-          link:
-          {' '}
-          <a href={ providers.link } target="blanck">TMDB</a>
-        </p>}
-
     </>
   );
 }

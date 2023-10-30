@@ -16,7 +16,9 @@ import MediaButtons from '../../components/MediaButtons/MediaButtons';
 import FavButtons from '../../components/FavButtons/FavButtons';
 import { ButtonsDiv, HeaderContainer, MovieContainer,
   MovieTitle, ImagesContainer,
-  MovieImage, TimeContainer, GenresList, Genre, MovieDescription, DecriptionContainer, DirectorContainer } from './MovieStyles';
+  MovieImage, TimeContainer, GenresList, Genre,
+  MovieDescription,
+  DecriptionContainer, DirectorContainer, WhereWatchText } from './MovieStyles';
 
 export default function Movie() {
   const [movie, setMovie] = useState<MovieDetailsProps>({} as MovieDetailsProps);
@@ -161,7 +163,7 @@ export default function Movie() {
               <span>
                 {minutesWath && hoursWatch
                   ? `  ${hoursWatch}h ${minutesWath}m`
-                  : t('movie.notInformed')}
+                  : ''}
               </span>
             </TimeContainer>
             <ImagesContainer>
@@ -203,7 +205,7 @@ export default function Movie() {
                 <a href={ homepage } target="_blanck">{` ${title}`}</a>
               </p>)}
             <div>
-              <p>{t('movie.whereWatch')}</p>
+              <WhereWatchText>{t('movie.whereWatch')}</WhereWatchText>
               { !providers ? <p>{t('movie.noServicesFound')}</p>
                 : (<ProvidersCard providers={ providers } />)}
             </div>

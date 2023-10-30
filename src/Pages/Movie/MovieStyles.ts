@@ -86,7 +86,8 @@ export const DecriptionContainer = styled.div`
 `;
 
 export const MovieDescription = styled.p`
-  width: calc(90% - 4px);
+  width: 100%;
+  max-width: calc(90% - 4px);
   text-align: justify;
 `;
 
@@ -123,4 +124,9 @@ export const DirectorContainer = styled.div`
   }
 
 
+`;
+
+export const WhereWatchText = styled.p`
+  font-size: 1.1rem;
+  font-weight: bold;
 `;

@@ -73,9 +73,11 @@ export const Director = styled.h3`
   color: #fff;
 `;
 
-export const Rating = styled.div`
+export const RatingDiv = styled.div`
   position: relative;
   padding: 0.4em 0;
+  display: flex;
+  align-items: center;
 `;
 
 export const ReleaseSpan = styled.span`
@@ -87,7 +89,11 @@ export const StarsDiv = styled.div`
   position: relative;
   display: inline-block;
   font-size: 1em;
-  background-image: linear-gradient(90deg, #f7f406 50%, transparent 50% );
+
+  & span {
+    color: #f7f406;
+    font-size: 1.1rem;
+  }
 `;
 
 export const StarsSpan = styled.span`

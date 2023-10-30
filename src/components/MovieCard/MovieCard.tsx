@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
-import { FiStar } from 'react-icons/fi';
+import { Rating } from '@mui/material';
 import { ActorMoviesProps, DetailsProps,
   MovieDetailsProps, MovieProps } from '../../types';
 import { MovieContainer, CardPoster, CardImage, SearchDiv,
-  CardInfo, CardTitle, Director, Rating, StarsDiv,
+  CardInfo, CardTitle, Director, RatingDiv, StarsDiv,
   StarsSpan, RatingSpan, TagsDiv, TagsSpan, ReleaseSpan,
   MovieDetails, MovieCast, CastUl, CastLi, CastImage, SearchInfo,
 } from './MovieCardStyle';
@@ -53,6 +53,10 @@ export default function MovieCard({ movie, character = '',
   const poster = details?.images?.posters[0]?.file_path;
 
   const imageUrl = import.meta.env.VITE_IMG;
+  const firstActor = details?.credits?.cast[0]?.name;
+  const secondActor = details?.credits?.cast[1]?.name;
+
+  console.log((+movie?.vote_average?.toFixed(1) / 2));
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -67,7 +71,7 @@ export default function MovieCard({ movie, character = '',
             <p>{movie.title}</p>
             <p>{movie.release_date.slice(0, 4)}</p>
             <p>
-              {`${details.credits?.cast[0]?.name}, ${details.credits?.cast[1]?.name}`}
+              {`${firstActor}${secondActor ? `, ${secondActor}` : ''}`}
             </p>
           </SearchInfo>
         </SearchDiv>
@@ -88,7 +92,7 @@ export default function MovieCard({ movie, character = '',
             <CardInfo className="details">
               <CardTitle>{movie.title}</CardTitle>
               {director && <Director>{`Directed by: ${director}`}</Director>}
-              <Rating>
+              <RatingDiv>
                 {type === 'Upcoming' ? (
                   <>
                     <ReleaseSpan>Release Date:</ReleaseSpan>
@@ -97,11 +101,14 @@ export default function MovieCard({ movie, character = '',
                 ) : (
                   <>
                     <StarsDiv>
-                      <StarsSpan><FiStar /></StarsSpan>
-                      <StarsSpan><FiStar /></StarsSpan>
-                      <StarsSpan><FiStar /></StarsSpan>
-                      <StarsSpan><FiStar /></StarsSpan>
-                      <StarsSpan><FiStar /></StarsSpan>
+                      <span>
+                        <Rating
+                          name="read-only"
+                          value={ (+movie.vote_average.toFixed(1) / 2) }
+                          readOnly
+                          precision={ 0.1 }
+                        />
+                      </span>
                     </StarsDiv>
                     <RatingSpan>
                       {movie
@@ -111,7 +118,7 @@ export default function MovieCard({ movie, character = '',
                   </>
 
                 )}
-              </Rating>
+              </RatingDiv>
               {!!details.genres?.length
         && (
           <TagsDiv className="tags">

@@ -101,7 +101,7 @@ export const SearchUl = styled.ul<{ show: string }>`
   top: 100%;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 90vh;
   background-color: rgba(22, 22, 22, 1);
   border-radius: 0 0 8px 8px;
   padding: 8px;
