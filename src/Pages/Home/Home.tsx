@@ -37,7 +37,7 @@ export default function Home() {
             <PopularContent>
               <PopularCard movies={ popular } />
             </PopularContent>
-            <div style={ { marginTop: '40vh' } }>
+            <div style={ { marginTop: '20px' } }>
               <MovieCarousel movies={ trending } text={ t('home.trending') } />
               <MovieCarousel
                 movies={ upcoming }

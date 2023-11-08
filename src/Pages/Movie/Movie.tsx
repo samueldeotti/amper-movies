@@ -6,7 +6,7 @@ import { Link, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
-
+import { Rating } from '@mui/material';
 import { MovieDetailsProps, MovieProps, UserInfoMovie, VideoProps } from '../../types';
 import { addRating,
   customStyles, getCertainData, handleLoggedMovies } from '../../utils';
@@ -14,11 +14,15 @@ import ProvidersCard from '../../components/ProvidersCard/ProvidersCard';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
 import MediaButtons from '../../components/MediaButtons/MediaButtons';
 import FavButtons from '../../components/FavButtons/FavButtons';
+import { ButtonsDiv, HeaderContainer, MovieContainer,
+  MovieTitle, ImagesContainer, MovieImage,
+  TimeContainer, GenresList, Genre, MovieDescription,
+  DecriptionContainer, DirectorContainer, WhereWatchText } from './MovieStyles';
 
 export default function Movie() {
   const [movie, setMovie] = useState<MovieDetailsProps>({} as MovieDetailsProps);
   const [userMovieInfo, setUserMovieInfo] = useState({} as UserInfoMovie);
-  const [rating, setRating] = useState(1);
+  const [rating, setRating] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const { t, i18n } = useTranslation();
 
@@ -107,60 +111,85 @@ export default function Movie() {
     return videos?.find(({ type }: VideoProps) => type === 'Trailer');
   };
 
+  const director = movie?.credits?.crew
+    ?.find((person) => person.job === 'Director')?.name || 'Not informed';
+  const writer = movie?.credits?.crew
+    ?.find((person) => person.job === 'Writer')?.name || 'Not informed';
+
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {!movie.id ? <p>Loading...</p>
         : (
-          <div>
-            <h2>{title}</h2>
-            <p>{tagline}</p>
-            <div style={ { display: 'flex', justifyContent: 'center' } }>
-              <div>
-                <p>{ t('movie.tmdb') }</p>
-                <p>
-                  {vote_average > +0
-                    ? Number(vote_average).toFixed(1) : t('movie.released')}
-                </p>
+          <MovieContainer>
+            <HeaderContainer>
+              <div style={ { width: '50%' } }>
+                <MovieTitle>{title}</MovieTitle>
+                <p>{tagline}</p>
               </div>
-              <FavButtons
-                textCondition={ userMovieInfo.rated }
-                typeButton="rate"
-                modal={ openModal }
-              />
-              <FavButtons
-                typeButton="favorite"
-                textCondition={ userMovieInfo.favorite }
-                handleLogged={ () => handleLogged('favorite') }
-              />
-              <FavButtons
-                typeButton="watchlist"
-                textCondition={ userMovieInfo.watchlist }
-                handleLogged={ () => handleLogged('watchlist') }
-              />
-            </div>
-            <img src={ imageUrl + poster_path } alt="" />
-            { searchTrailer() ? <iframe width="560" height="315" src={ `https://www.youtube.com/embed/${searchTrailer()?.key}` } title="YouTube video player" frameBorder="0" allow="encrypted-media; gyroscope; picture-in-picture; web-share" /> : <div><p>No Trailer Found</p></div>}
-            <MediaButtons videos={ videos } images={ images } />
-            <p>
-              {vote_average > +0
-                ? release_date?.split('-')[0]
-                : `${t('movie.releaseDate')} ${formattedDate}`}
-            </p>
-            <p>
-              {minutesWath && hoursWatch
-                ? `${t('movie.duration')} ${hoursWatch}h ${minutesWath}m`
-                : t('movie.notInformed')}
-            </p>
-            <div>
-              <p>{t('movie.genres')}</p>
-              <ul>
-                {genres?.slice(0, 3)?.map(({ name }) => <li key={ name }>{name}</li>)}
-              </ul>
-            </div>
-            <p>{overview}</p>
+              <ButtonsDiv>
+                <div style={ { textAlign: 'center' } }>
+                  <p style={ { fontSize: '1rem' } }>{ t('movie.tmdb') }</p>
+                  <p style={ { fontSize: '1.4rem', lineHeight: '40px' } }>
+                    {vote_average > +0
+                      ? Number(vote_average).toFixed(1) : t('movie.released')}
+                  </p>
+                </div>
+                <FavButtons
+                  textCondition={ userMovieInfo.rated }
+                  typeButton="rate"
+                  modal={ openModal }
+                />
+                <FavButtons
+                  typeButton="favorite"
+                  textCondition={ userMovieInfo.favorite }
+                  handleLogged={ () => handleLogged('favorite') }
+                />
+                <FavButtons
+                  typeButton="watchlist"
+                  textCondition={ userMovieInfo.watchlist }
+                  handleLogged={ () => handleLogged('watchlist') }
+                />
+              </ButtonsDiv>
+            </HeaderContainer>
+            <TimeContainer>
+              <span>
+                {movie.status === 'Released'
+                  ? release_date?.split('-')[0]
+                  : `${t('movie.releaseDate')} ${formattedDate}`}
+              </span>
+              <span>
+                {minutesWath && hoursWatch
+                  ? `  ${hoursWatch}h ${minutesWath}m`
+                  : ''}
+              </span>
+            </TimeContainer>
+            <ImagesContainer>
+              <MovieImage src={ imageUrl + poster_path } alt="movie poster" />
+              { searchTrailer() ? <iframe src={ `https://www.youtube.com/embed/${searchTrailer()?.key}` } title="YouTube video player" frameBorder="0" allow="encrypted-media; gyroscope; picture-in-picture; web-share" style={ { width: '218rem', height: '100%' } } /> : <div style={ { width: '218rem', height: '100%' } }><p>No Trailer Found</p></div>}
+              <MediaButtons videos={ videos } images={ images } />
+            </ImagesContainer>
+            <GenresList>
+              {genres?.slice(0, 3)?.map((genre) => (
+                <Genre key={ genre.id }>
+                  <Link to={ `/genre/${genre.id}/${genre.name}` }>{genre.name}</Link>
+                </Genre>))}
+            </GenresList>
+            <DecriptionContainer>
+              <MovieDescription>{overview}</MovieDescription>
+              <DirectorContainer>
+                <p>
+                  <span>Director </span>
+                  {director}
+                </p>
+                <p>
+                  <span>Writer </span>
+                  {writer}
+                </p>
+              </DirectorContainer>
+            </DecriptionContainer>
             {!!credits.cast.length && (
-              <div>
+              <div style={ { width: '100%' } }>
                 <Link to={ `/credits.cast/${movie.id}` }>{t('movie.seeFullCast')}</Link>
                 <MovieCarousel
                   movies={ credits.cast?.slice(0, 12) }
@@ -174,13 +203,12 @@ export default function Movie() {
                 <a href={ homepage } target="_blanck">{` ${title}`}</a>
               </p>)}
             <div>
-              <p>{t('movie.whereWatch')}</p>
+              <WhereWatchText>{t('movie.whereWatch')}</WhereWatchText>
               { !providers ? <p>{t('movie.noServicesFound')}</p>
                 : (<ProvidersCard providers={ providers } />)}
             </div>
             {!!recommendations?.length && (
-              <div>
-                <p>{t('movie.similars')}</p>
+              <div style={ { width: '100%' } }>
                 <MovieCarousel
                   movies={ recommendations?.slice(0, 12) }
                   text={ t('movie.moreLikeThis') }
@@ -200,20 +228,21 @@ export default function Movie() {
               </div>
               <button onClick={ closeModal }>X</button>
               <form onSubmit={ handleSubmit }>
-                <input
-                  type="range"
-                  min="1"
-                  max="10"
-                  step="1"
+                <Rating
+                  name="customized-10"
                   value={ rating }
-                  onChange={ ({ target }) => setRating(+target.value) }
+                  onChange={ ({ target }) => {
+                    setRating(+(target as HTMLInputElement).value);
+                  } }
+                  precision={ 0.25 }
+                  defaultValue={ userMovieInfo.rated ? 1 : 0 }
+                  max={ 10 }
                 />
                 <button type="submit">{t('movie.rate.rateText')}</button>
               </form>
             </Modal>
-          </div>
+          </MovieContainer>
         )}
-
     </>
   );
 }

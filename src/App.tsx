@@ -20,7 +20,6 @@ function App() {
         <Route path="/movies/watchlist" element={ <LoggedPages /> } />
         <Route path="/movies/rated" element={ <LoggedPages /> } />
         <Route path="/genres" element={ <Genres /> } />
-
       </Route>
       {/* <Route path='/*' element={ <NotFound /> }></Route> */}
     </Routes>

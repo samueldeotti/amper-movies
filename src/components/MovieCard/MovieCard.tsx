@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
-import { FiStar } from 'react-icons/fi';
+import { Rating } from '@mui/material';
 import { ActorMoviesProps, DetailsProps,
   MovieDetailsProps, MovieProps } from '../../types';
 import { MovieContainer, CardPoster, CardImage, SearchDiv,
-  CardInfo, CardTitle, Director, Rating, StarsDiv,
-  StarsSpan, RatingSpan, TagsDiv, TagsSpan, ReleaseSpan,
+  CardInfo, CardTitle, Director, RatingDiv, StarsDiv,
+  RatingSpan, TagsDiv, TagsSpan, ReleaseSpan,
   MovieDetails, MovieCast, CastUl, CastLi, CastImage, SearchInfo,
 } from './MovieCardStyle';
 
@@ -19,10 +19,11 @@ type MovieCardProps = {
   character?: string;
   type?: string
   search?: boolean;
+  ul?: boolean;
 };
 
 export default function MovieCard({ movie, character = '',
-  type = '', search = false }: MovieCardProps) {
+  type = '', search = false, ul = false }: MovieCardProps) {
   const { i18n } = useTranslation();
 
   const [details, setDetails] = useState<DetailsProps>({} as DetailsProps);
@@ -52,12 +53,14 @@ export default function MovieCard({ movie, character = '',
   const poster = details?.images?.posters[0]?.file_path;
 
   const imageUrl = import.meta.env.VITE_IMG;
+  const firstActor = details?.credits?.cast[0]?.name;
+  const secondActor = details?.credits?.cast[1]?.name;
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       { search ? (
-        <SearchDiv to={ `/movie/${movie.id}` }>
+        <SearchDiv to={ `/movie/${movie.id}` } list={ ul }>
           <img
             src={ imageUrl + movie.poster_path }
             alt="movie poster"
@@ -66,7 +69,7 @@ export default function MovieCard({ movie, character = '',
             <p>{movie.title}</p>
             <p>{movie.release_date.slice(0, 4)}</p>
             <p>
-              {`${details.credits?.cast[0]?.name}, ${details.credits?.cast[1]?.name}`}
+              {`${firstActor}${secondActor ? `, ${secondActor}` : ''}`}
             </p>
           </SearchInfo>
         </SearchDiv>
@@ -87,7 +90,7 @@ export default function MovieCard({ movie, character = '',
             <CardInfo className="details">
               <CardTitle>{movie.title}</CardTitle>
               {director && <Director>{`Directed by: ${director}`}</Director>}
-              <Rating>
+              <RatingDiv>
                 {type === 'Upcoming' ? (
                   <>
                     <ReleaseSpan>Release Date:</ReleaseSpan>
@@ -96,22 +99,25 @@ export default function MovieCard({ movie, character = '',
                 ) : (
                   <>
                     <StarsDiv>
-                      <StarsSpan><FiStar /></StarsSpan>
-                      <StarsSpan><FiStar /></StarsSpan>
-                      <StarsSpan><FiStar /></StarsSpan>
-                      <StarsSpan><FiStar /></StarsSpan>
-                      <StarsSpan><FiStar /></StarsSpan>
+                      <span>
+                        <Rating
+                          name="read-only"
+                          value={ (+movie.vote_average.toFixed(1) / 2) }
+                          readOnly
+                          precision={ 0.1 }
+                        />
+                      </span>
                     </StarsDiv>
-                    {/* <meter min="1" max="10" value={ movie.vote_average.toFixed(1) } /> */}
                     <RatingSpan>
                       {movie
                         .vote_average.toFixed(1) === '0.0'
-                        ? '' : movie.vote_average.toFixed(1)}
+                        ? '' : (+movie.vote_average.toFixed(1) / 2).toFixed(1)}
+                      /5
                     </RatingSpan>
                   </>
 
                 )}
-              </Rating>
+              </RatingDiv>
               {!!details.genres?.length
         && (
           <TagsDiv className="tags">

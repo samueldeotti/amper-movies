@@ -29,7 +29,17 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    overflow-x: hidden;
+    overflow-x: hidden; 
+  }
+
+  body::-webkit-scrollbar {
+  width: 0.8rem;
+  /* border: 3px solid rgb(85, 85, 84); */
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background-color: rgb(85, 85, 84);
+    /* border-radius: 20px; */
   }
 
 `;

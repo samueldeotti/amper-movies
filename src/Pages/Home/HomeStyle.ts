@@ -16,9 +16,10 @@ export const HomeContainer = styled.div`
 `;
 
 export const PopularContent = styled.div`
-  top: 150px;
+  top: 0;
   left: 0;
   width: 100%;
+  height: 96vh;
   position: relative;
   display: flex;
   align-items: center;

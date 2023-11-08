@@ -47,13 +47,13 @@ export default function MovieCarousel({ movies, text, type = '' }: MovieCardProp
 
   return (
     <div>
-      <p style={ { marginLeft: '10px' } }>{text}</p>
+      <p style={ { marginLeft: '10px', userSelect: 'none' } }>{text}</p>
       <div
         style={ {
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',
-          width: '100vw',
+          width: 'calc(100vw - 30px)',
           overflow: 'hidden',
           userSelect: 'none',
           cursor: isDown ? 'grabbing' : 'grab' } }
@@ -69,7 +69,11 @@ export default function MovieCarousel({ movies, text, type = '' }: MovieCardProp
         onTouchCancel={ () => setIsDown(false) }
         onTouchMove={ (e) => handleMouseMove(e) }
       >
-        <div style={ { display: 'flex', pointerEvents: isDown ? 'none' : 'all' } }>
+        <div
+          style={ { display: 'flex',
+            pointerEvents: isDown ? 'none' : 'all',
+            marginLeft: '10px' } }
+        >
           {movies.map((movie: any) => (movie?.title
             ? <MovieCard key={ movie.id } movie={ movie } type={ type } />
             : <CastCard key={ movie.id } cast={ movie } />))}

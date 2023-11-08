@@ -15,8 +15,8 @@
       "add": "Add rate"
     },
     "watchlist": {
-      "add": "Add to watchlist",
-      "remove": "Remove from watchlist"
+      "add": "Add to list",
+      "remove": "Remove from list"
     },
     "favorite": {
       "add": "Add to favorites",
@@ -48,7 +48,7 @@
   },
   "header": {
     "favorites": "Favorites",
-    "watchlist": "Watchlist",
+    "watchlist": "List",
     "account": "Account",
     "logout": "Logout",
     "rated": "Rated Movies",
@@ -57,7 +57,7 @@
   "logged": {
     "movies": "Movies",
     "rated": "Remove Rate",
-    "watchlist": "Remove from Watchlist",
+    "watchlist": "Remove from List",
     "favorites": "Remove from Favorites",
     "Share": "Share",
     "dontHave": "You don't have any movies",

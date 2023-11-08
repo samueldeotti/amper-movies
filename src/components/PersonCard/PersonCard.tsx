@@ -4,16 +4,17 @@ import { SearchDiv, SearchInfo } from '../MovieCard/MovieCardStyle';
 
 type PersonCardProps = {
   personInfo: ActorMoviesProps;
+  ul?: boolean;
 };
 
 const imageUrl = import.meta.env.VITE_IMG;
 
-export default function PersonCard({ personInfo }: PersonCardProps) {
+export default function PersonCard({ personInfo, ul = false }: PersonCardProps) {
   const { id, name, known_for_department, profile_path, known_for } = personInfo;
 
   return (
 
-    <SearchDiv to={ `/person/${name.replace(' ', '')}/${id}` }>
+    <SearchDiv to={ `/person/${name.replace(' ', '')}/${id}` } list={ ul }>
       <img
         src={ profile_path ? imageUrl + profile_path : '/anonym.png' }
         alt=""

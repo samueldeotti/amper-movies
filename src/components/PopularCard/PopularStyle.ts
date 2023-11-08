@@ -3,20 +3,20 @@ import { Link } from 'react-router-dom';
 
 export const PopularDiv = styled.div`
   position: relative;
-  top: 25vh;
   display: flex;
   align-items: end;
   justify-content: center;
-  width: 100vw;
-  height: 500px;
+  width: 100%;
+  height: 100%;
   overflow-y: visible;
   overflow-x: hidden;
+  user-select: none;
 `;
 
 export const CardContainer = styled.div`
+  bottom: 2%;
   cursor: pointer;
   position: relative;
-  bottom: 80px;
   margin: 0 20px;
 `;
 
@@ -49,7 +49,7 @@ transform: translate(-50%, -50%);
 `;
 
 export const Background = styled.section<{ image: string }>`
-  height: 90vh;
+  height: 100%;
   position: absolute;
   z-index: -1;
   transition: 0.5s;
