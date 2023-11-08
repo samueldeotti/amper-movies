@@ -6,7 +6,7 @@ import { Link, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
-
+import { Rating } from '@mui/material';
 import { MovieDetailsProps, MovieProps, UserInfoMovie, VideoProps } from '../../types';
 import { addRating,
   customStyles, getCertainData, handleLoggedMovies } from '../../utils';
@@ -15,15 +15,14 @@ import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
 import MediaButtons from '../../components/MediaButtons/MediaButtons';
 import FavButtons from '../../components/FavButtons/FavButtons';
 import { ButtonsDiv, HeaderContainer, MovieContainer,
-  MovieTitle, ImagesContainer,
-  MovieImage, TimeContainer, GenresList, Genre,
-  MovieDescription,
+  MovieTitle, ImagesContainer, MovieImage,
+  TimeContainer, GenresList, Genre, MovieDescription,
   DecriptionContainer, DirectorContainer, WhereWatchText } from './MovieStyles';
 
 export default function Movie() {
   const [movie, setMovie] = useState<MovieDetailsProps>({} as MovieDetailsProps);
   const [userMovieInfo, setUserMovieInfo] = useState({} as UserInfoMovie);
-  const [rating, setRating] = useState(1);
+  const [rating, setRating] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const { t, i18n } = useTranslation();
 
@@ -127,7 +126,6 @@ export default function Movie() {
               <div style={ { width: '50%' } }>
                 <MovieTitle>{title}</MovieTitle>
                 <p>{tagline}</p>
-
               </div>
               <ButtonsDiv>
                 <div style={ { textAlign: 'center' } }>
@@ -191,7 +189,7 @@ export default function Movie() {
               </DirectorContainer>
             </DecriptionContainer>
             {!!credits.cast.length && (
-              <div>
+              <div style={ { width: '100%' } }>
                 <Link to={ `/credits.cast/${movie.id}` }>{t('movie.seeFullCast')}</Link>
                 <MovieCarousel
                   movies={ credits.cast?.slice(0, 12) }
@@ -210,7 +208,7 @@ export default function Movie() {
                 : (<ProvidersCard providers={ providers } />)}
             </div>
             {!!recommendations?.length && (
-              <div>
+              <div style={ { width: '100%' } }>
                 <MovieCarousel
                   movies={ recommendations?.slice(0, 12) }
                   text={ t('movie.moreLikeThis') }
@@ -230,20 +228,21 @@ export default function Movie() {
               </div>
               <button onClick={ closeModal }>X</button>
               <form onSubmit={ handleSubmit }>
-                <input
-                  type="range"
-                  min="1"
-                  max="10"
-                  step="1"
+                <Rating
+                  name="customized-10"
                   value={ rating }
-                  onChange={ ({ target }) => setRating(+target.value) }
+                  onChange={ ({ target }) => {
+                    setRating(+(target as HTMLInputElement).value);
+                  } }
+                  precision={ 0.25 }
+                  defaultValue={ userMovieInfo.rated ? 1 : 0 }
+                  max={ 10 }
                 />
                 <button type="submit">{t('movie.rate.rateText')}</button>
               </form>
             </Modal>
           </MovieContainer>
         )}
-
     </>
   );
 }

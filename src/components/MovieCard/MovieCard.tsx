@@ -8,7 +8,7 @@ import { ActorMoviesProps, DetailsProps,
   MovieDetailsProps, MovieProps } from '../../types';
 import { MovieContainer, CardPoster, CardImage, SearchDiv,
   CardInfo, CardTitle, Director, RatingDiv, StarsDiv,
-  StarsSpan, RatingSpan, TagsDiv, TagsSpan, ReleaseSpan,
+  RatingSpan, TagsDiv, TagsSpan, ReleaseSpan,
   MovieDetails, MovieCast, CastUl, CastLi, CastImage, SearchInfo,
 } from './MovieCardStyle';
 
@@ -55,8 +55,6 @@ export default function MovieCard({ movie, character = '',
   const imageUrl = import.meta.env.VITE_IMG;
   const firstActor = details?.credits?.cast[0]?.name;
   const secondActor = details?.credits?.cast[1]?.name;
-
-  console.log((+movie?.vote_average?.toFixed(1) / 2));
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -113,7 +111,8 @@ export default function MovieCard({ movie, character = '',
                     <RatingSpan>
                       {movie
                         .vote_average.toFixed(1) === '0.0'
-                        ? '' : movie.vote_average.toFixed(1)}
+                        ? '' : (+movie.vote_average.toFixed(1) / 2).toFixed(1)}
+                      /5
                     </RatingSpan>
                   </>
 
